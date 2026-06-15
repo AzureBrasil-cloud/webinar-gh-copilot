@@ -271,7 +271,7 @@ Other suggestions is use inline chat instead:
 3. Paste and press Enter:
 
 ```text
-Replace every occurrence of "BookStore.Web" with "Book Store".
+Replace every occurrence of label "BookStore.Web" with "Book Store".
 ```
 
 Review the diff and click **Accept**.
@@ -389,12 +389,7 @@ Concretely:
 6. Run `dotnet build Src/BookStore.slnx` and fix any errors before finishing.
 ```
 
-**Expected outcome:**
-
-- `BookStore.Domain/Exceptions/DomainException.cs` created.
-- `Author.cs` and `Book.cs` have private setters and domain methods.
-- `AuthorService` and `BookService` are significantly shorter - no validation logic.
-- `dotnet build Src/BookStore.slnx` returns 0 errors.
+**Expected outcome:** Domain entities are now rich and enforce their own rules. Services are anemic and only orchestrate. `DomainException` is thrown on invariant violations.
 
 **Verify:**
 
@@ -433,7 +428,7 @@ Path: `.github/instructions/pagination.instructions.md`
 
 ````markdown
 ---
-applyTo: "**/*.cshtml,Src/BookStore.Application/Common/PagedResult.cs,Src/BookStore.Application/Services/*.cs"
+applyTo: "**/*.cshtml,Src/BookStore.Application/Common/*.cs,Src/BookStore.Application/Services/*.cs"
 ---
 
 # Pagination conventions for BookStore.Web
