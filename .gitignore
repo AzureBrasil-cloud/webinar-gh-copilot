@@ -9,6 +9,9 @@
 # sandbox files
 *.sandbox.*
 
+# training-content-author.agent.md
+training-content-author.agent.md
+
 # User-specific files
 *.rsuser
 *.suo
