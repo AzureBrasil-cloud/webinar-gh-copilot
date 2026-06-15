@@ -271,7 +271,7 @@ Other suggestions is use inline chat instead:
 3. Paste and press Enter:
 
 ```text
-Replace every occurrence of "BookStore.Web" with "Book Store".
+Replace every occurrence of label "BookStore.Web" with "Book Store".
 ```
 
 Review the diff and click **Accept**.
