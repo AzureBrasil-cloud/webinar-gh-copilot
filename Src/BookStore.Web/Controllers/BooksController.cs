@@ -1,5 +1,5 @@
-using BookStore.Web.Application.Services;
-using BookStore.Web.Domain.Entities;
+using BookStore.Application.Services;
+using BookStore.Domain.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 

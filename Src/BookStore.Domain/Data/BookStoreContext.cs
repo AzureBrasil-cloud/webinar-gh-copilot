@@ -1,7 +1,7 @@
-using BookStore.Web.Domain.Entities;
+using BookStore.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStore.Web.Domain.Data;
+namespace BookStore.Domain.Data;
 
 public class BookStoreContext : DbContext
 {

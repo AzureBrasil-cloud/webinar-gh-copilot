@@ -1,8 +1,8 @@
-using BookStore.Web.Domain.Data;
-using BookStore.Web.Domain.Entities;
+using BookStore.Domain.Data;
+using BookStore.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BookStore.Web.Application.Services;
+namespace BookStore.Application.Services;
 
 public class BookService : IBookService
 {

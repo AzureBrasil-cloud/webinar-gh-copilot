@@ -1,6 +1,6 @@
-using BookStore.Web.Domain.Entities;
+using BookStore.Domain.Entities;
 
-namespace BookStore.Web.Application.Services;
+namespace BookStore.Application.Services;
 
 public interface IAuthorService
 {
