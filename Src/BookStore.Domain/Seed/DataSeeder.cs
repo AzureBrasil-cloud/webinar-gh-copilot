@@ -59,11 +59,6 @@ public static class DataSeeder
             new() { Id = 27, AuthorId = 10, Title = "Orlando",                      Isbn = "9780156701600", Genre = "Modernist",       Price = 13.50m, Stock = 0,  PublishedDate = new DateTime(1928, 10, 11), Description = "A poet who changes sex and lives for centuries." }
         };
 
-        foreach (var book in books)
-        {
-            book.IsAvailable = book.Stock > 0;
-        }
-
         db.Books.AddRange(books);
         db.SaveChanges();
     }

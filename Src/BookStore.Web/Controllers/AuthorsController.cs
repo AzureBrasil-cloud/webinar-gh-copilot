@@ -1,5 +1,6 @@
 using BookStore.Application.Services;
 using BookStore.Domain.Entities;
+using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BookStore.Web.Controllers;
@@ -39,7 +40,7 @@ public class AuthorsController : Controller
             await _authorService.CreateAsync(author);
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (DomainException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
             return View(author);
@@ -66,7 +67,7 @@ public class AuthorsController : Controller
             if (result is null) return NotFound();
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (DomainException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
             return View(author);
@@ -89,7 +90,7 @@ public class AuthorsController : Controller
             await _authorService.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (DomainException ex)
         {
             var author = await _authorService.GetByIdAsync(id);
             ModelState.AddModelError(string.Empty, ex.Message);

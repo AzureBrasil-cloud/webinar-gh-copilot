@@ -30,53 +30,19 @@ public class AuthorService : IAuthorService
 
     public async Task<Author> CreateAsync(Author author)
     {
-        if (string.IsNullOrWhiteSpace(author.Name))
-        {
-            throw new InvalidOperationException("Author name is required.");
-        }
-
-        if (author.Name.Length > 150)
-        {
-            throw new InvalidOperationException("Author name must be at most 150 characters.");
-        }
-
-        if (author.BirthDate > DateTime.UtcNow)
-        {
-            throw new InvalidOperationException("Birth date cannot be in the future.");
-        }
-
-        author.Name = author.Name.Trim();
-        author.Nationality = (author.Nationality ?? string.Empty).Trim();
-        author.Bio = (author.Bio ?? string.Empty).Trim();
-
-        _db.Authors.Add(author);
+        var entity = Author.Create(author.Name, author.Bio, author.Nationality, author.BirthDate);
+        _db.Authors.Add(entity);
         await _db.SaveChangesAsync();
-        return author;
+        return entity;
     }
 
     public async Task<Author?> UpdateAsync(int id, Author author)
     {
         var existing = await _db.Authors.FirstOrDefaultAsync(a => a.Id == id);
         if (existing is null)
-        {
             return null;
-        }
 
-        if (string.IsNullOrWhiteSpace(author.Name))
-        {
-            throw new InvalidOperationException("Author name is required.");
-        }
-
-        if (author.BirthDate > DateTime.UtcNow)
-        {
-            throw new InvalidOperationException("Birth date cannot be in the future.");
-        }
-
-        existing.Name = author.Name.Trim();
-        existing.Bio = (author.Bio ?? string.Empty).Trim();
-        existing.Nationality = (author.Nationality ?? string.Empty).Trim();
-        existing.BirthDate = author.BirthDate;
-
+        existing.Update(author.Name, author.Bio, author.Nationality, author.BirthDate);
         await _db.SaveChangesAsync();
         return existing;
     }
@@ -88,15 +54,9 @@ public class AuthorService : IAuthorService
             .FirstOrDefaultAsync(a => a.Id == id);
 
         if (existing is null)
-        {
             return false;
-        }
 
-        if (existing.Books.Any())
-        {
-            throw new InvalidOperationException("Cannot delete an author who still has books.");
-        }
-
+        existing.EnsureCanBeDeleted();
         _db.Authors.Remove(existing);
         await _db.SaveChangesAsync();
         return true;

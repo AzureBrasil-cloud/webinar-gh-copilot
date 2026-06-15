@@ -1,5 +1,6 @@
 using BookStore.Application.Services;
 using BookStore.Domain.Entities;
+using BookStore.Domain.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -50,7 +51,7 @@ public class BooksController : Controller
             await _bookService.CreateAsync(book);
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (DomainException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
             await PopulateAuthorsAsync(book.AuthorId);
@@ -84,7 +85,7 @@ public class BooksController : Controller
             if (result is null) return NotFound();
             return RedirectToAction(nameof(Index));
         }
-        catch (InvalidOperationException ex)
+        catch (DomainException ex)
         {
             ModelState.AddModelError(string.Empty, ex.Message);
             await PopulateAuthorsAsync(book.AuthorId);

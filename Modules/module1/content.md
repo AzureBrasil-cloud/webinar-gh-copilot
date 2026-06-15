@@ -389,12 +389,7 @@ Concretely:
 6. Run `dotnet build Src/BookStore.slnx` and fix any errors before finishing.
 ```
 
-**Expected outcome:**
-
-- `BookStore.Domain/Exceptions/DomainException.cs` created.
-- `Author.cs` and `Book.cs` have private setters and domain methods.
-- `AuthorService` and `BookService` are significantly shorter - no validation logic.
-- `dotnet build Src/BookStore.slnx` returns 0 errors.
+**Expected outcome:** Domain entities are now rich and enforce their own rules. Services are anemic and only orchestrate. `DomainException` is thrown on invariant violations.
 
 **Verify:**
 
