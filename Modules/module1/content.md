@@ -253,7 +253,7 @@ Do not modify anything.
 
 **Expected outcome:** Copilot identifies the locations in solution files where the internal project name appears.
 
-### 1.2) Fix using inline suggestions
+### 1.2) Fix using inline suggestions or inline chat
 
 This is a small, contained change in a single file - the ideal scenario for inline suggestions.
 
@@ -302,7 +302,7 @@ Switch to **Ask** mode.
 Be concise.
 ```
 
-**Expected outcome:** Copilot points at `AuthorService.CreateAsync`, `BookService.CreateAsync`, `BookService.UpdateAsync`, and `AuthorService.DeleteAsync` as the problematic methods where validation logic belongs to the domain layer.
+**Expected outcome:** Copilot points to the problematic methods where validation logic belongs to the domain layer.
 
 ### 2.2) Fix using Plan mode + Agent mode
 
