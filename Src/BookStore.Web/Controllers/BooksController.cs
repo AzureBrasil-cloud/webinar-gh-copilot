@@ -1,3 +1,4 @@
+using BookStore.Application.Common;
 using BookStore.Application.Services;
 using BookStore.Domain.Entities;
 using BookStore.Domain.Exceptions;
@@ -17,10 +18,10 @@ public class BooksController : Controller
         _authorService = authorService;
     }
 
-    public async Task<IActionResult> Index()
+    public async Task<IActionResult> Index(int page = 1)
     {
-        var books = await _bookService.GetAllAsync();
-        return View(books);
+        var result = await _bookService.GetPagedAsync(page, pageSize: 10);
+        return View(result);
     }
 
     public async Task<IActionResult> Details(int id)

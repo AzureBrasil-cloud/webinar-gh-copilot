@@ -1,3 +1,4 @@
+using BookStore.Application.Common;
 using BookStore.Domain.Data;
 using BookStore.Domain.Entities;
 using BookStore.Domain.Exceptions;
@@ -20,6 +21,16 @@ public class BookService : IBookService
             .Include(b => b.Author)
             .OrderBy(b => b.Title)
             .ToListAsync();
+    }
+
+    public async Task<PagedResult<Book>> GetPagedAsync(int pageNumber, int pageSize)
+    {
+        pageNumber = Math.Max(1, pageNumber);
+        pageSize = Math.Clamp(pageSize, 1, 100);
+        var query = _db.Books.Include(b => b.Author).OrderBy(b => b.Title);
+        var total = await query.CountAsync();
+        var items = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+        return new PagedResult<Book> { Items = items, PageNumber = pageNumber, PageSize = pageSize, TotalItems = total };
     }
 
     public async Task<Book?> GetByIdAsync(int id)

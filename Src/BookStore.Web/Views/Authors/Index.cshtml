@@ -1,4 +1,5 @@
-@model IEnumerable<Author>
+@using BookStore.Application.Common
+@model PagedResult<Author>
 @{
     ViewData["Title"] = "Authors";
 }
@@ -20,7 +21,7 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var author in Model)
+        @foreach (var author in Model.Items)
         {
             <tr>
                 <td>@author.Name</td>
@@ -37,3 +38,5 @@
         </tbody>
     </table>
 </div>
+
+<partial name="_Pagination" model="Model" />

@@ -428,7 +428,7 @@ Path: `.github/instructions/pagination.instructions.md`
 
 ````markdown
 ---
-applyTo: "**/*.cshtml,Src/BookStore.Application/Common/PagedResult.cs,Src/BookStore.Application/Services/*.cs"
+applyTo: "**/*.cshtml,Src/BookStore.Application/Common/*.cs,Src/BookStore.Application/Services/*.cs"
 ---
 
 # Pagination conventions for BookStore.Web
