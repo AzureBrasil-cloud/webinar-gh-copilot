@@ -1,8 +1,8 @@
-# Module 1 — GitHub Copilot: Ask, Plan, Agent modes & custom instructions
+# Module 1 - GitHub Copilot: Ask, Plan, Agent modes & custom instructions
 
-**Goal:** use the three GitHub Copilot interaction modes and custom instructions to fix two real design problems in a .NET 10 MVC application — without writing a single line of code by hand.
+**Goal:** use the three GitHub Copilot interaction modes and custom instructions to fix two real design problems in a .NET 10 MVC application - without writing a single line of code by hand.
 
-**Deliverable:** `BookStore.Web` refactored so that (1) domain rules live inside the domain entities and (2) the index pages have server-side pagination — all driven by Copilot with the right context.
+**Deliverable:** `BookStore.Web` refactored so that (1) domain rules live inside the domain entities and (2) the index pages have server-side pagination - all driven by Copilot with the right context.
 
 ---
 
@@ -19,7 +19,7 @@ code --version
 dotnet --version
 ```
 
-✅ **Repository checked out — `initial` branch**
+✅ **Repository checked out - `initial` branch**
 
 ```bash
 git checkout initial
@@ -29,7 +29,7 @@ git checkout initial
 
 ## Problems to solve in this module
 
-### Problem 1 — Domain logic leaking into the application layer
+### Problem 1 - Domain logic leaking into the application layer
 
 `AuthorService` and `BookService` enforce rules that belong to the domain:
 
@@ -37,11 +37,11 @@ git checkout initial
 - Derived state: `Book.IsAvailable = Stock > 0`
 - Business invariant: an author with books cannot be deleted
 
-The entities (`Author`, `Book`) are **anemic** — they hold only data via public setters. The services own all the logic. Any future caller (a REST API, a background job) would have to duplicate those checks.
+The entities (`Author`, `Book`) are **anemic** - they hold only data via public setters. The services own all the logic. Any future caller (a REST API, a background job) would have to duplicate those checks.
 
 **Fix:** move all invariants into the entities (rich domain model). Services should only load, call, save.
 
-### Problem 2 — No pagination on index pages
+### Problem 2 - No pagination on index pages
 
 `BooksController.Index` and `AuthorsController.Index` call `GetAllAsync()` and pass the entire table to the view. With 27 books today, and growth ahead, this will degrade performance and UX.
 
@@ -65,7 +65,7 @@ Plan is a **review-before-apply mode**. Copilot generates a step-by-step plan fo
 
 ### Agent mode
 
-Agent is an **autonomous execution mode**. Copilot reads files, makes edits, runs terminal commands (like `dotnet build`), reads the output, and iterates — all in a loop until the task is done. Use it for end-to-end implementation tasks.
+Agent is an **autonomous execution mode**. Copilot reads files, makes edits, runs terminal commands (like `dotnet build`), reads the output, and iterates - all in a loop until the task is done. Use it for end-to-end implementation tasks.
 
 > References: [Agent mode in VS Code](https://code.visualstudio.com/docs/copilot/agents/agents-tutorial) · [Plan mode in Copilot CLI](https://docs.github.com/copilot/how-tos/copilot-cli/cli-best-practices#plan-mode)
 
@@ -89,7 +89,7 @@ A Markdown file in `.github/instructions/` with a YAML front-matter `applyTo` gl
 Src/
 ├── BookStore.slnx
 ├── BookStore.Domain/
-│   ├── Entities/   Author.cs, Book.cs        (anemic — only properties)
+│   ├── Entities/   Author.cs, Book.cs        (anemic - only properties)
 │   ├── Data/       BookStoreContext.cs        (EF Core In-Memory)
 │   └── Seed/       DataSeeder.cs             (10 authors + 27 books)
 ├── BookStore.Application/
@@ -118,9 +118,9 @@ dotnet build BookStore.slnx
 
 ---
 
-## Step 1 — Explore with Ask mode
+## Step 1 - Explore with Ask mode
 
-Switch the Copilot Chat dropdown to **Ask**. We are not changing anything yet — just reading and validating our mental model.
+Switch the Copilot Chat dropdown to **Ask**. We are not changing anything yet - just reading and validating our mental model.
 
 ### 1.1) Understand the project structure
 
@@ -149,7 +149,7 @@ Expected: .NET 10, `dotnet build Src/BookStore.slnx`, `dotnet run --project Src/
 #codebase Give me a short architectural overview of the solution under Src/:
 - The role of each project (BookStore.Domain, BookStore.Application, BookStore.Web).
 - Which classes hold business rules today and which only orchestrate.
-- List every place where domain rules are leaking into the application layer — include file path and line number.
+- List every place where domain rules are leaking into the application layer - include file path and line number.
 Be concise.
 ```
 
@@ -173,7 +173,7 @@ Do not modify anything.
 
 ---
 
-## Step 2 — Fix Problem 1: rich domain model (Agent mode + general instructions)
+## Step 2 - Fix Problem 1: rich domain model (Agent mode + general instructions)
 
 ### 2.1) Create `.github/copilot-instructions.md`
 
@@ -182,13 +182,13 @@ This file teaches Copilot the architecture of this repo for every future prompt.
 Path: `.github/copilot-instructions.md`
 
 ```markdown
-# BookStore — Copilot repository instructions
+# BookStore - Copilot repository instructions
 
 ## Solution layout
 - .NET 10 multi-project solution under `Src/`.
-  - `BookStore.Domain` — entities, `BookStoreContext` (EF Core In-Memory), seed data.
-  - `BookStore.Application` — application services (orchestration only).
-  - `BookStore.Web` — ASP.NET Core 10 MVC (controllers, Razor views, Bootstrap 5).
+  - `BookStore.Domain` - entities, `BookStoreContext` (EF Core In-Memory), seed data.
+  - `BookStore.Application` - application services (orchestration only).
+  - `BookStore.Web` - ASP.NET Core 10 MVC (controllers, Razor views, Bootstrap 5).
 - No authentication.
 
 ## Architecture rules
@@ -227,10 +227,10 @@ Switch to **Plan** mode first to review the approach, then switch to **Agent** t
 ```text
 Following the architecture in .github/copilot-instructions.md, refactor the project so the domain layer owns its business rules.
 
-Plan the following changes — do not make any edits yet:
+Plan the following changes - do not make any edits yet:
 1. Add `BookStore.Domain/Exceptions/DomainException.cs`.
 2. Enrich `Author` and `Book` with private setters and domain methods that enforce invariants.
-3. Strip all validation logic from `AuthorService` and `BookService` — services only load, call domain methods, and save.
+3. Strip all validation logic from `AuthorService` and `BookService` - services only load, call domain methods, and save.
 4. Update controllers to catch `DomainException` (not `InvalidOperationException`) when displaying errors.
 5. Verify `dotnet build Src/BookStore.slnx` stays green.
 ```
@@ -258,7 +258,7 @@ Concretely:
 
 - `BookStore.Domain/Exceptions/DomainException.cs` created.
 - `Author.cs` and `Book.cs` have private setters and domain methods.
-- `AuthorService` and `BookService` are significantly shorter — no validation logic.
+- `AuthorService` and `BookService` are significantly shorter - no validation logic.
 - `dotnet build Src/BookStore.slnx` → 0 errors.
 
 **Verify:**
@@ -267,21 +267,21 @@ Concretely:
 dotnet run --project Src/BookStore.Web
 ```
 
-Try creating a book with `Price = -1` at `/Books/Create`. The error should still appear — but now the rule is enforced inside `Book.Create(...)`, not inside `BookService`.
+Try creating a book with `Price = -1` at `/Books/Create`. The error should still appear - but now the rule is enforced inside `Book.Create(...)`, not inside `BookService`.
 
 ---
 
-## Step 3 — Fix Problem 2: server-side pagination (Agent mode + file-specific instructions)
+## Step 3 - Fix Problem 2: server-side pagination (Agent mode + file-specific instructions)
 
 ### 3.1) Create `.github/instructions/pagination.instructions.md`
 
-This file applies only to controllers, views, and application services — not the whole repo.
+This file applies only to controllers, views, and application services - not the whole repo.
 
 Path: `.github/instructions/pagination.instructions.md`
 
 ````markdown
 ---
-applyTo: "Src/BookStore.Web/Controllers/**/*.cs,Src/BookStore.Web/Views/**/*.cshtml,Src/BookStore.Application/Services/*.cs"
+applyTo: "**/*.cshtml,Src/BookStore.Application/Common/PagedResult.cs,Src/BookStore.Application/Services/*.cs"
 ---
 
 # Pagination conventions for BookStore.Web
@@ -314,7 +314,7 @@ When implementing or modifying a list/index page:
 ## What not to do
 - Do not add a NuGet pagination package.
 - Do not paginate on the client side.
-- Only change Index actions — leave CRUD actions untouched.
+- Only change Index actions - leave CRUD actions untouched.
 ````
 
 ### 3.2) Apply with Agent mode
@@ -328,7 +328,7 @@ Steps:
 1. Create `BookStore.Application/Common/PagedResult.cs`.
 2. Add `GetPagedAsync(int pageNumber, int pageSize)` to `IBookService` / `BookService` and `IAuthorService` / `AuthorService`. Default page size 10.
 3. Update `BooksController.Index` and `AuthorsController.Index` to accept `int page = 1` and use the paged method.
-4. Update `Views/Books/Index.cshtml` and `Views/Authors/Index.cshtml`: type `@model PagedResult<...>`, render `Model.Items`, add a Bootstrap 5 pager.
+4. Create a reusable pagination component in `Views/Shared/_Pagination.cshtml` (renders Previous/Next buttons, page indicator, disabled states per PagedResult properties). Update `Views/Books/Index.cshtml` and `Views/Authors/Index.cshtml`: type `@model PagedResult<...>`, render `Model.Items` in the table, and include the pagination component at the bottom.
 5. Run `dotnet build Src/BookStore.slnx` and fix any errors.
 
 Do not touch the Domain layer.
@@ -344,7 +344,7 @@ Do not touch the Domain layer.
 
 ---
 
-## Step 4 — Verify everything
+## Step 4 - Verify everything
 
 ```bash
 dotnet run --project Src/BookStore.Web
@@ -386,16 +386,16 @@ Module 2 will start from `module/1` and cover the next set of Copilot features.
 
 ## References
 
-- What is GitHub Copilot? — <https://docs.github.com/en/copilot/get-started/what-is-github-copilot>
-- GitHub Copilot plans — <https://docs.github.com/en/copilot/get-started/plans>
-- Models and pricing — <https://docs.github.com/copilot/reference/copilot-billing/models-and-pricing>
-- GitHub Copilot in VS Code — <https://code.visualstudio.com/docs/copilot/overview>
-- Ask / Plan / Agent modes — <https://docs.github.com/copilot/using-github-copilot/asking-github-copilot-questions-in-your-ide>
-- Agent mode in VS Code — <https://code.visualstudio.com/docs/copilot/agents/agents-tutorial>
-- Plan mode in Copilot CLI — <https://docs.github.com/copilot/how-tos/copilot-cli/cli-best-practices#plan-mode>
-- Repository custom instructions — <https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot>
-- Custom instructions in VS Code — <https://code.visualstudio.com/docs/copilot/customization/custom-instructions>
-- Custom instructions support matrix — <https://docs.github.com/en/copilot/reference/custom-instructions-support>
-- Prompt files — <https://code.visualstudio.com/docs/copilot/customization/prompt-files>
-- Agent Skills — <https://code.visualstudio.com/docs/copilot/customization/agent-skills>
-- Copilot cloud agent — <https://code.visualstudio.com/docs/copilot/copilot-cloud-agent>
+- What is GitHub Copilot? - <https://docs.github.com/en/copilot/get-started/what-is-github-copilot>
+- GitHub Copilot plans - <https://docs.github.com/en/copilot/get-started/plans>
+- Models and pricing - <https://docs.github.com/copilot/reference/copilot-billing/models-and-pricing>
+- GitHub Copilot in VS Code - <https://code.visualstudio.com/docs/copilot/overview>
+- Ask / Plan / Agent modes - <https://docs.github.com/copilot/using-github-copilot/asking-github-copilot-questions-in-your-ide>
+- Agent mode in VS Code - <https://code.visualstudio.com/docs/copilot/agents/agents-tutorial>
+- Plan mode in Copilot CLI - <https://docs.github.com/copilot/how-tos/copilot-cli/cli-best-practices#plan-mode>
+- Repository custom instructions - <https://docs.github.com/copilot/customizing-copilot/adding-custom-instructions-for-github-copilot>
+- Custom instructions in VS Code - <https://code.visualstudio.com/docs/copilot/customization/custom-instructions>
+- Custom instructions support matrix - <https://docs.github.com/en/copilot/reference/custom-instructions-support>
+- Prompt files - <https://code.visualstudio.com/docs/copilot/customization/prompt-files>
+- Agent Skills - <https://code.visualstudio.com/docs/copilot/customization/agent-skills>
+- Copilot cloud agent - <https://code.visualstudio.com/docs/copilot/copilot-cloud-agent>

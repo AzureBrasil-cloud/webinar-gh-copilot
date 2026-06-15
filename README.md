@@ -1,4 +1,4 @@
-# GitHub Copilot Webinar Series — .NET MVC
+# GitHub Copilot Webinar Series - .NET MVC
 
 A hands-on series showing how to use GitHub Copilot effectively in a real-world .NET 10 MVC project. Each module focuses on a different set of Copilot features and applies them to solve concrete problems in the **BookStore** application.
 
@@ -6,7 +6,7 @@ A hands-on series showing how to use GitHub Copilot effectively in a real-world 
 
 | Branch | What is covered |
 |---|---|
-| `initial` | Starting point — BookStore.Web with two intentional design problems |
+| `initial` | Starting point - BookStore.Web with two intentional design problems |
 | `module/1` | Ask / Plan / Agent modes · custom instructions · rich domain model · server-side pagination |
 
 > Modules are added incrementally. Each `module/N` branch contains the result of completing that module's exercises.
