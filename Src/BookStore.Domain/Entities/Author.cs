@@ -12,6 +12,8 @@ public class Author
 
     public ICollection<Book> Books { get; set; } = new List<Book>();
 
+    public int Age => (int)Math.Floor((DateTime.UtcNow - BirthDate).TotalDays / 365.25);
+
     public static Author Create(string name, string bio, string nationality, DateTime birthDate)
     {
         Validate(name, birthDate);
