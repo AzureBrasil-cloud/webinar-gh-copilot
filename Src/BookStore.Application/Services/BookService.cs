@@ -40,19 +40,19 @@ public class BookService : IBookService
             .FirstOrDefaultAsync(b => b.Id == id);
     }
 
-    public async Task<Book> CreateAsync(Book book)
+    public async Task<Book> CreateAsync(Book book, int numberOfPages)
     {
         var authorExists = await _db.Authors.AnyAsync(a => a.Id == book.AuthorId);
         if (!authorExists)
             throw new DomainException("Author does not exist.");
 
-        var entity = Book.Create(book.Title, book.Isbn, book.Description, book.Genre, book.Price, book.Stock, book.PublishedDate, book.AuthorId);
+        var entity = Book.Create(book.Title, book.Isbn, book.Description, book.Genre, book.Price, book.Stock, book.PublishedDate, book.AuthorId, numberOfPages);
         _db.Books.Add(entity);
         await _db.SaveChangesAsync();
         return entity;
     }
 
-    public async Task<Book?> UpdateAsync(int id, Book book)
+    public async Task<Book?> UpdateAsync(int id, Book book, int numberOfPages)
     {
         var existing = await _db.Books.FirstOrDefaultAsync(b => b.Id == id);
         if (existing is null)
@@ -62,7 +62,7 @@ public class BookService : IBookService
         if (!authorExists)
             throw new DomainException("Author does not exist.");
 
-        existing.Update(book.Title, book.Isbn, book.Description, book.Genre, book.Price, book.Stock, book.PublishedDate, book.AuthorId);
+        existing.Update(book.Title, book.Isbn, book.Description, book.Genre, book.Price, book.Stock, book.PublishedDate, book.AuthorId, numberOfPages);
         await _db.SaveChangesAsync();
         return existing;
     }

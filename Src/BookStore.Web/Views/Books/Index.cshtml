@@ -18,6 +18,7 @@
                 <th>Genre</th>
                 <th class="text-end">Price</th>
                 <th class="text-end">Stock</th>
+                <th class="text-end">Pages</th>
                 <th>Available</th>
                 <th class="text-end">Actions</th>
             </tr>
@@ -31,6 +32,7 @@
                 <td>@book.Genre</td>
                 <td class="text-end">@book.Price.ToString("C")</td>
                 <td class="text-end">@book.Stock</td>
+                <td class="text-end">@book.NumberOfPages</td>
                 <td>
                     @if (book.IsAvailable)
                     {

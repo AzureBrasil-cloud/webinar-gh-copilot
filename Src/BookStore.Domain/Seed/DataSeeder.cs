@@ -28,35 +28,42 @@ public static class DataSeeder
 
         db.Authors.AddRange(authors);
 
+        static Book MakeBook(int id, int authorId, string title, string isbn, string genre, decimal price, int stock, DateTime publishedDate, string description, int numberOfPages)
+        {
+            var b = Book.Create(title, isbn, description, genre, price, stock, publishedDate, authorId, numberOfPages);
+            b.Id = id;
+            return b;
+        }
+
         var books = new List<Book>
         {
-            new() { Id = 1,  AuthorId = 1, Title = "1984",                          Isbn = "9780451524935", Genre = "Dystopian",       Price = 14.99m, Stock = 25, PublishedDate = new DateTime(1949, 6, 8),   Description = "A dystopian social science fiction novel." },
-            new() { Id = 2,  AuthorId = 1, Title = "Animal Farm",                   Isbn = "9780451526342", Genre = "Allegory",        Price = 9.99m,  Stock = 40, PublishedDate = new DateTime(1945, 8, 17),  Description = "An allegorical novella." },
-            new() { Id = 3,  AuthorId = 1, Title = "Homage to Catalonia",           Isbn = "9780156421171", Genre = "Memoir",          Price = 12.50m, Stock = 8,  PublishedDate = new DateTime(1938, 4, 25),  Description = "Personal account of the Spanish Civil War." },
-            new() { Id = 4,  AuthorId = 2, Title = "Pride and Prejudice",           Isbn = "9780141439518", Genre = "Romance",         Price = 11.99m, Stock = 30, PublishedDate = new DateTime(1813, 1, 28),  Description = "A romantic novel of manners." },
-            new() { Id = 5,  AuthorId = 2, Title = "Sense and Sensibility",         Isbn = "9780141439662", Genre = "Romance",         Price = 10.99m, Stock = 18, PublishedDate = new DateTime(1811, 10, 30), Description = "Two sisters and their romantic experiences." },
-            new() { Id = 6,  AuthorId = 2, Title = "Emma",                          Isbn = "9780141439587", Genre = "Romance",         Price = 10.99m, Stock = 0,  PublishedDate = new DateTime(1815, 12, 23), Description = "A young woman with too much time to matchmake." },
-            new() { Id = 7,  AuthorId = 3, Title = "The Hobbit",                    Isbn = "9780547928227", Genre = "Fantasy",         Price = 15.99m, Stock = 50, PublishedDate = new DateTime(1937, 9, 21),  Description = "Bilbo Baggins' adventure." },
-            new() { Id = 8,  AuthorId = 3, Title = "The Fellowship of the Ring",    Isbn = "9780547928210", Genre = "Fantasy",         Price = 18.99m, Stock = 22, PublishedDate = new DateTime(1954, 7, 29),  Description = "First volume of The Lord of the Rings." },
-            new() { Id = 9,  AuthorId = 3, Title = "The Two Towers",                Isbn = "9780547928203", Genre = "Fantasy",         Price = 18.99m, Stock = 17, PublishedDate = new DateTime(1954, 11, 11), Description = "Second volume of The Lord of the Rings." },
-            new() { Id = 10, AuthorId = 4, Title = "Murder on the Orient Express",  Isbn = "9780062073495", Genre = "Mystery",         Price = 13.99m, Stock = 12, PublishedDate = new DateTime(1934, 1, 1),   Description = "A classic Hercule Poirot mystery." },
-            new() { Id = 11, AuthorId = 4, Title = "And Then There Were None",      Isbn = "9780062073488", Genre = "Mystery",         Price = 13.99m, Stock = 14, PublishedDate = new DateTime(1939, 11, 6),  Description = "Ten strangers on an island." },
-            new() { Id = 12, AuthorId = 4, Title = "Death on the Nile",             Isbn = "9780062073556", Genre = "Mystery",         Price = 12.99m, Stock = 9,  PublishedDate = new DateTime(1937, 11, 1),  Description = "Poirot investigates a murder on a cruise." },
-            new() { Id = 13, AuthorId = 5, Title = "The Old Man and the Sea",       Isbn = "9780684801223", Genre = "Fiction",         Price = 11.50m, Stock = 20, PublishedDate = new DateTime(1952, 9, 1),   Description = "Story of an aging Cuban fisherman." },
-            new() { Id = 14, AuthorId = 5, Title = "A Farewell to Arms",            Isbn = "9780684801469", Genre = "War",             Price = 13.50m, Stock = 11, PublishedDate = new DateTime(1929, 9, 27),  Description = "A love story set during World War I." },
-            new() { Id = 15, AuthorId = 6, Title = "One Hundred Years of Solitude", Isbn = "9780060883287", Genre = "Magical Realism", Price = 16.99m, Stock = 16, PublishedDate = new DateTime(1967, 5, 30),  Description = "Multi-generational story of the Buendía family." },
-            new() { Id = 16, AuthorId = 6, Title = "Love in the Time of Cholera",   Isbn = "9780307389732", Genre = "Romance",         Price = 14.99m, Stock = 7,  PublishedDate = new DateTime(1985, 9, 5),   Description = "An epic story of love and longing." },
-            new() { Id = 17, AuthorId = 7, Title = "Norwegian Wood",                Isbn = "9780375704024", Genre = "Fiction",         Price = 14.50m, Stock = 13, PublishedDate = new DateTime(1987, 9, 4),   Description = "A nostalgic story of loss and sexuality." },
-            new() { Id = 18, AuthorId = 7, Title = "Kafka on the Shore",            Isbn = "9781400079278", Genre = "Magical Realism", Price = 16.50m, Stock = 10, PublishedDate = new DateTime(2002, 9, 12),  Description = "Two intertwined narratives of self-discovery." },
-            new() { Id = 19, AuthorId = 7, Title = "1Q84",                          Isbn = "9780307476463", Genre = "Fiction",         Price = 19.99m, Stock = 5,  PublishedDate = new DateTime(2009, 5, 29),  Description = "A complex parallel-world novel." },
-            new() { Id = 20, AuthorId = 8, Title = "The Shining",                   Isbn = "9780307743657", Genre = "Horror",          Price = 14.99m, Stock = 24, PublishedDate = new DateTime(1977, 1, 28),  Description = "A family's winter at the haunted Overlook Hotel." },
-            new() { Id = 21, AuthorId = 8, Title = "It",                            Isbn = "9781501142970", Genre = "Horror",          Price = 17.99m, Stock = 19, PublishedDate = new DateTime(1986, 9, 15),  Description = "Children face a shape-shifting evil in Derry, Maine." },
-            new() { Id = 22, AuthorId = 8, Title = "Misery",                        Isbn = "9781501143106", Genre = "Thriller",        Price = 13.99m, Stock = 0,  PublishedDate = new DateTime(1987, 6, 8),   Description = "A novelist held captive by his number one fan." },
-            new() { Id = 23, AuthorId = 9, Title = "Foundation",                    Isbn = "9780553293357", Genre = "Sci-Fi",          Price = 12.99m, Stock = 21, PublishedDate = new DateTime(1951, 5, 1),   Description = "The decline and fall of a galactic empire." },
-            new() { Id = 24, AuthorId = 9, Title = "I, Robot",                      Isbn = "9780553382563", Genre = "Sci-Fi",          Price = 11.99m, Stock = 26, PublishedDate = new DateTime(1950, 12, 2),  Description = "Nine stories about positronic robots." },
-            new() { Id = 25, AuthorId = 10, Title = "Mrs Dalloway",                 Isbn = "9780156628709", Genre = "Modernist",       Price = 12.50m, Stock = 6,  PublishedDate = new DateTime(1925, 5, 14),  Description = "A day in the life of Clarissa Dalloway." },
-            new() { Id = 26, AuthorId = 10, Title = "To the Lighthouse",            Isbn = "9780156907392", Genre = "Modernist",       Price = 12.50m, Stock = 4,  PublishedDate = new DateTime(1927, 5, 5),   Description = "The Ramsay family's visits to the Isle of Skye." },
-            new() { Id = 27, AuthorId = 10, Title = "Orlando",                      Isbn = "9780156701600", Genre = "Modernist",       Price = 13.50m, Stock = 0,  PublishedDate = new DateTime(1928, 10, 11), Description = "A poet who changes sex and lives for centuries." }
+            MakeBook(1,  1,  "1984",                          "9780451524935", "Dystopian",       14.99m, 25, new DateTime(1949, 6, 8),   "A dystopian social science fiction novel.",           328),
+            MakeBook(2,  1,  "Animal Farm",                   "9780451526342", "Allegory",         9.99m, 40, new DateTime(1945, 8, 17),  "An allegorical novella.",                             112),
+            MakeBook(3,  1,  "Homage to Catalonia",           "9780156421171", "Memoir",          12.50m,  8, new DateTime(1938, 4, 25),  "Personal account of the Spanish Civil War.",          232),
+            MakeBook(4,  2,  "Pride and Prejudice",           "9780141439518", "Romance",         11.99m, 30, new DateTime(1813, 1, 28),  "A romantic novel of manners.",                        432),
+            MakeBook(5,  2,  "Sense and Sensibility",         "9780141439662", "Romance",         10.99m, 18, new DateTime(1811, 10, 30), "Two sisters and their romantic experiences.",         374),
+            MakeBook(6,  2,  "Emma",                          "9780141439587", "Romance",         10.99m,  0, new DateTime(1815, 12, 23), "A young woman with too much time to matchmake.",      474),
+            MakeBook(7,  3,  "The Hobbit",                    "9780547928227", "Fantasy",         15.99m, 50, new DateTime(1937, 9, 21),  "Bilbo Baggins' adventure.",                           310),
+            MakeBook(8,  3,  "The Fellowship of the Ring",    "9780547928210", "Fantasy",         18.99m, 22, new DateTime(1954, 7, 29),  "First volume of The Lord of the Rings.",              479),
+            MakeBook(9,  3,  "The Two Towers",                "9780547928203", "Fantasy",         18.99m, 17, new DateTime(1954, 11, 11), "Second volume of The Lord of the Rings.",             415),
+            MakeBook(10, 4,  "Murder on the Orient Express",  "9780062073495", "Mystery",         13.99m, 12, new DateTime(1934, 1, 1),   "A classic Hercule Poirot mystery.",                   256),
+            MakeBook(11, 4,  "And Then There Were None",      "9780062073488", "Mystery",         13.99m, 14, new DateTime(1939, 11, 6),  "Ten strangers on an island.",                         264),
+            MakeBook(12, 4,  "Death on the Nile",             "9780062073556", "Mystery",         12.99m,  9, new DateTime(1937, 11, 1),  "Poirot investigates a murder on a cruise.",           288),
+            MakeBook(13, 5,  "The Old Man and the Sea",       "9780684801223", "Fiction",         11.50m, 20, new DateTime(1952, 9, 1),   "Story of an aging Cuban fisherman.",                  127),
+            MakeBook(14, 5,  "A Farewell to Arms",            "9780684801469", "War",             13.50m, 11, new DateTime(1929, 9, 27),  "A love story set during World War I.",                332),
+            MakeBook(15, 6,  "One Hundred Years of Solitude", "9780060883287", "Magical Realism", 16.99m, 16, new DateTime(1967, 5, 30),  "Multi-generational story of the Buendía family.",     417),
+            MakeBook(16, 6,  "Love in the Time of Cholera",   "9780307389732", "Romance",         14.99m,  7, new DateTime(1985, 9, 5),   "An epic story of love and longing.",                  348),
+            MakeBook(17, 7,  "Norwegian Wood",                "9780375704024", "Fiction",         14.50m, 13, new DateTime(1987, 9, 4),   "A nostalgic story of loss and sexuality.",            293),
+            MakeBook(18, 7,  "Kafka on the Shore",            "9781400079278", "Magical Realism", 16.50m, 10, new DateTime(2002, 9, 12),  "Two intertwined narratives of self-discovery.",       505),
+            MakeBook(19, 7,  "1Q84",                          "9780307476463", "Fiction",         19.99m,  5, new DateTime(2009, 5, 29),  "A complex parallel-world novel.",                     925),
+            MakeBook(20, 8,  "The Shining",                   "9780307743657", "Horror",          14.99m, 24, new DateTime(1977, 1, 28),  "A family's winter at the haunted Overlook Hotel.",    447),
+            MakeBook(21, 8,  "It",                            "9781501142970", "Horror",          17.99m, 19, new DateTime(1986, 9, 15),  "Children face a shape-shifting evil in Derry, Maine.", 960),
+            MakeBook(22, 8,  "Misery",                        "9781501143106", "Thriller",        13.99m,  0, new DateTime(1987, 6, 8),   "A novelist held captive by his number one fan.",      338),
+            MakeBook(23, 9,  "Foundation",                    "9780553293357", "Sci-Fi",          12.99m, 21, new DateTime(1951, 5, 1),   "The decline and fall of a galactic empire.",          255),
+            MakeBook(24, 9,  "I, Robot",                      "9780553382563", "Sci-Fi",          11.99m, 26, new DateTime(1950, 12, 2),  "Nine stories about positronic robots.",               253),
+            MakeBook(25, 10, "Mrs Dalloway",                  "9780156628709", "Modernist",       12.50m,  6, new DateTime(1925, 5, 14),  "A day in the life of Clarissa Dalloway.",             194),
+            MakeBook(26, 10, "To the Lighthouse",             "9780156907392", "Modernist",       12.50m,  4, new DateTime(1927, 5, 5),   "The Ramsay family's visits to the Isle of Skye.",     209),
+            MakeBook(27, 10, "Orlando",                       "9780156701600", "Modernist",       13.50m,  0, new DateTime(1928, 10, 11), "A poet who changes sex and lives for centuries.",     208),
         };
 
         db.Books.AddRange(books);

@@ -39,7 +39,7 @@ public class BooksController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Book book)
+    public async Task<IActionResult> Create(Book book, int numberOfPages)
     {
         if (!ModelState.IsValid)
         {
@@ -49,7 +49,7 @@ public class BooksController : Controller
 
         try
         {
-            await _bookService.CreateAsync(book);
+            await _bookService.CreateAsync(book, numberOfPages);
             return RedirectToAction(nameof(Index));
         }
         catch (DomainException ex)
@@ -70,7 +70,7 @@ public class BooksController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, Book book)
+    public async Task<IActionResult> Edit(int id, Book book, int numberOfPages)
     {
         if (id != book.Id) return BadRequest();
 
@@ -82,7 +82,7 @@ public class BooksController : Controller
 
         try
         {
-            var result = await _bookService.UpdateAsync(id, book);
+            var result = await _bookService.UpdateAsync(id, book, numberOfPages);
             if (result is null) return NotFound();
             return RedirectToAction(nameof(Index));
         }

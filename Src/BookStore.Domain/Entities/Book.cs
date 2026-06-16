@@ -13,13 +13,14 @@ public class Book
     public int Stock { get; set; }
     public DateTime PublishedDate { get; set; }
     public bool IsAvailable => Stock > 0;
+    public int NumberOfPages { get; private set; }
 
     public int AuthorId { get; set; }
     public Author? Author { get; set; }
 
-    public static Book Create(string title, string isbn, string description, string genre, decimal price, int stock, DateTime publishedDate, int authorId)
+    public static Book Create(string title, string isbn, string description, string genre, decimal price, int stock, DateTime publishedDate, int authorId, int numberOfPages)
     {
-        Validate(title, price, stock, publishedDate);
+        Validate(title, price, stock, publishedDate, numberOfPages);
         return new Book
         {
             Title = title.Trim(),
@@ -29,13 +30,14 @@ public class Book
             Price = price,
             Stock = stock,
             PublishedDate = publishedDate,
-            AuthorId = authorId
+            AuthorId = authorId,
+            NumberOfPages = numberOfPages
         };
     }
 
-    public void Update(string title, string isbn, string description, string genre, decimal price, int stock, DateTime publishedDate, int authorId)
+    public void Update(string title, string isbn, string description, string genre, decimal price, int stock, DateTime publishedDate, int authorId, int numberOfPages)
     {
-        Validate(title, price, stock, publishedDate);
+        Validate(title, price, stock, publishedDate, numberOfPages);
         Title = title.Trim();
         Isbn = (isbn ?? string.Empty).Trim();
         Description = (description ?? string.Empty).Trim();
@@ -44,9 +46,10 @@ public class Book
         Stock = stock;
         PublishedDate = publishedDate;
         AuthorId = authorId;
+        NumberOfPages = numberOfPages;
     }
 
-    private static void Validate(string title, decimal price, int stock, DateTime publishedDate)
+    private static void Validate(string title, decimal price, int stock, DateTime publishedDate, int numberOfPages)
     {
         if (string.IsNullOrWhiteSpace(title))
             throw new DomainException("Title is required.");
@@ -59,5 +62,8 @@ public class Book
 
         if (publishedDate > DateTime.UtcNow)
             throw new DomainException("Published date cannot be in the future.");
+
+        if (numberOfPages < 1)
+            throw new DomainException("NumberOfPages must be at least 1.");
     }
 }

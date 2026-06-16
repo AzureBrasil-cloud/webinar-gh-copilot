@@ -41,6 +41,10 @@
             <label asp-for="Stock" class="form-label"></label>
             <input asp-for="Stock" type="number" class="form-control" />
         </div>
+        <div class="col-md-3">
+            <label for="numberOfPages" class="form-label">Number of pages</label>
+            <input type="number" id="numberOfPages" name="numberOfPages" class="form-control" min="1" />
+        </div>
         <div class="col-12">
             <label asp-for="Description" class="form-label"></label>
             <textarea asp-for="Description" rows="3" class="form-control"></textarea>
