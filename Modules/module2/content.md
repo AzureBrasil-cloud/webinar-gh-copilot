@@ -543,6 +543,7 @@ Switch to **Plan** mode in the Copilot Chat dropdown. Then click the prompt file
 **Prompt (to use together with the task-planner prompt file in Plan mode):**
 
 ```text
+/task-planner
 Add a NumberOfPages property to the Book entity and write tests for it.
 
 Requirements:
