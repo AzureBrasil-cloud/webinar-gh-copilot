@@ -4,21 +4,17 @@
     "type": "split",
     "children": [
       {
-        "id": "96ae3a8aa58d4368",
+        "id": "96dbf5183a13b36c",
         "type": "tabs",
         "children": [
           {
-            "id": "abf96950cac68963",
+            "id": "3fe8aea96aa49eba",
             "type": "leaf",
             "state": {
-              "type": "markdown",
-              "state": {
-                "file": "07_Templates/Note-Template.md",
-                "mode": "preview",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Note-Template"
+              "type": "graph",
+              "state": {},
+              "icon": "lucide-git-fork",
+              "title": "Graph view"
             }
           }
         ]
@@ -94,7 +90,6 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "07_Templates/Note-Template.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -104,7 +99,7 @@
                 "unlinkedCollapsed": true
               },
               "icon": "links-coming-in",
-              "title": "Backlinks for Note-Template"
+              "title": "Backlinks"
             }
           },
           {
@@ -113,12 +108,11 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "07_Templates/Note-Template.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               },
               "icon": "links-going-out",
-              "title": "Outgoing links from Note-Template"
+              "title": "Outgoing links"
             }
           },
           {
@@ -156,13 +150,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "07_Templates/Note-Template.md",
                 "followCursor": false,
                 "showSearch": false,
                 "searchQuery": ""
               },
               "icon": "lucide-list",
-              "title": "Outline of Note-Template"
+              "title": "Outline"
             }
           }
         ]
@@ -183,27 +176,36 @@
       "bases:Create new base": false
     }
   },
-  "active": "abf96950cac68963",
+  "active": "3fe8aea96aa49eba",
   "lastOpenFiles": [
-    "06_References/References-Overview.md",
-    "06_References",
-    "05_Operations/Operations-Overview.md",
-    "05_Operations",
-    "04_Engineering/Engineering-Overview.md",
     "04_Engineering",
+    "00_Index/Glossary.md",
+    "06_References/Azure-App-Service-Docs.md",
+    "06_References/Dotnet-Aspnetcore-Ef-Docs.md",
+    "05_Operations/Deployment-Runbook.md",
+    "05_Operations/Operations-Overview.md",
+    "04_Engineering/Testing.md",
+    "04_Engineering/Controllers.md",
+    "04_Engineering/Pagination.md",
+    "04_Engineering/Application-Services.md",
+    "04_Engineering/Engineering-Overview.md",
+    "03_Domain/Book.md",
+    "03_Domain/Author.md",
     "03_Domain/Domain-Overview.md",
-    "03_Domain",
     "02_Architecture/Architecture-Overview.md",
-    "02_Architecture",
     "01_Project/Dependencies.md",
     "01_Project/Repository-Structure.md",
+    "07_Templates/Note-Template.md",
+    "06_References/References-Overview.md",
+    "06_References",
+    "05_Operations",
+    "03_Domain",
+    "02_Architecture",
     "01_Project",
-    "00_Index/Glossary.md",
     "00_Index/Tags.md",
     "00_Index/Navigation.md",
     "00_Index/Home.md",
     "00_Index",
-    "07_Templates",
-    "07_Templates/Note-Template.md"
+    "07_Templates"
   ]
 }
