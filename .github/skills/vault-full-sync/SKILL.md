@@ -24,7 +24,7 @@ brew install ripgrep fd
 
 - `scope` — optional: area, component, project, or vault folder to audit. If omitted, audit the whole vault.
 - `context` — optional: free-text description of recent changes, focus areas, or known gaps.
-- `references` — optional: links to official docs, ADRs, code paths, PRs, or snippets the user wants reconciled.
+- `references` — optional: links to official docs, code paths, PRs, or snippets the user wants reconciled.
 
 ## Procedure
 
@@ -47,10 +47,8 @@ Use the `vscode_askQuestions` tool when available; otherwise ask in chat. Do not
 
 Read the canonical sources for the scope, in this order:
 
-1. `docs/CONTEXT.md` — domain language and business rules.
-2. `docs/adr/` — accepted architectural decisions. Treat as authoritative.
-3. Codebase under `Src/` — the implementation. Treat as authoritative for behavior.
-4. User-provided `references` — official docs, snippets, links.
+1. Codebase under `Src/` — the implementation. Treat as authoritative for behavior.
+2. User-provided `references` — official docs, snippets, links.
 
 Vault notes are NEVER the source of truth in this skill. They are the artifact being verified.
 
@@ -65,12 +63,12 @@ For the chosen scope:
 
 ### 5. Diff vault against code
 
-For each scoped concern (component, flow, env var, ADR, runbook, etc.), classify into one of:
+For each scoped concern (component, flow, entity, runbook, etc.), classify into one of:
 
 | Category | Meaning |
 |----------|---------|
-| `missing` | Code/ADR exists, no vault note describes it. |
-| `outdated` | Vault note exists but contradicts current code or an accepted ADR. |
+| `missing` | Code exists, no vault note describes it. |
+| `outdated` | Vault note exists but contradicts current code. |
 | `incomplete` | Vault note exists but omits a material aspect now present in code. |
 | `orphaned` | Vault note describes code that no longer exists or was removed. |
 | `unlinked` | Note exists and is correct, but missing from `Navigation.md` or lacks expected `[[wikilinks]]`. |
@@ -98,10 +96,10 @@ After applying changes, walk every touched note and verify it satisfies the link
 Return a single markdown report with these sections:
 
 1. **Scope** — what was audited and what was excluded.
-2. **Sources consulted** — CONTEXT.md, ADRs, code paths, user references, and the loaded `vault.instructions.md` revision (path is enough).
+2. **Sources consulted** — code paths, user references, and the loaded `vault.instructions.md` revision (path is enough).
 3. **Findings** — table of `note path | category | summary` for every non-`aligned` item.
 4. **Changes applied** — bullet list of created / updated / deleted notes, with the chosen `type/*` and key tags, plus any new tags added to `Tags.md` and any new sections added to `Navigation.md`.
-5. **Recommendations** — items that need human input (ambiguous behavior, unimplemented ADRs, conflicting docs the user must decide on). These are NOT applied automatically.
+5. **Recommendations** — items that need human input (ambiguous behavior, conflicting docs the user must decide on). These are NOT applied automatically.
 6. **Follow-ups** — `None` if nothing remains.
 
 ## Rules
