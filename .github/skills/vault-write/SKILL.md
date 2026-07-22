@@ -1,12 +1,12 @@
 ---
 name: vault-write
-description: "Add or update notes in the Atlas Obsidian vault. Use this skill AFTER making non-trivial code changes to keep documentation in sync. Load and execute this skill to create or update notes for new components, runbooks, decisions, environment variables, architecture changes, or operational procedures. Code changes are incomplete without a vault update."
+description: "Add or update notes in the BookStore Obsidian vault. Use this skill AFTER making non-trivial code changes to keep documentation in sync. Load and execute this skill to create or update notes for new components, runbooks, decisions, environment variables, architecture changes, or operational procedures. Code changes are incomplete without a vault update."
 argument-hint: "Describe the note(s) to create or update"
 ---
 
 # Vault Write
 
-Create or update notes in `docs/vault/AtlasVault/`. For all structural rules — frontmatter format, folder layout, tag taxonomy, naming conventions, body guidelines, and link requirements — see `.github/instructions/vault.instructions.md`.
+Create or update notes in `Docs/Vault/BookStore/`. For all structural rules — frontmatter format, folder layout, tag taxonomy, naming conventions, body guidelines, and link requirements — see `.github/instructions/vault.instructions.md`.
 
 ## Required tools
 
@@ -26,7 +26,7 @@ brew install ripgrep fd
 1. Read [docs](./references/docs.md) for the commands to load the live folder catalog, tag catalog, available templates, and detect existing notes. **Always load these at runtime — never use cached lists.**
 2. **Detect intent** (`add` vs `update`):
    - If `target` is given and the file exists → `update`.
-   - Otherwise search first: `rg -l --glob "*.md" --ignore-case --fixed-strings "<topic>" docs/vault/AtlasVault`.
+   - Otherwise search first: `rg -l --glob "*.md" --ignore-case --fixed-strings "<topic>" Docs/Vault/BookStore`.
    - One strong match (same scope/topic) → `update`; zero → `add`; multiple → ask the user or treat as `add`.
 3. **Decide single vs multiple notes** (atomicity rule: one topic per note). Split when two clearly separable subjects would have distinct `type/*` or `component/*` tags.
 4. **For each note:**

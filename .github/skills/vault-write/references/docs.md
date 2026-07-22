@@ -11,19 +11,19 @@ The **authoritative source** for the folder layout is `00_Index/Home.md` (sectio
 Folder → purpose mapping (authoritative description):
 
 ```bash
-sed -n '/^## Sections/,/^## /p' docs/vault/AtlasVault/00_Index/Home.md
+sed -n '/^## Sections/,/^## /p' Docs/Vault/BookStore/00_Index/Home.md
 ```
 
 Actual folders that currently exist (top-level + one nested level, e.g., `05_Operations/Runbooks`):
 
 ```bash
-fd --type d --max-depth 2 . docs/vault/AtlasVault
+fd --type d --max-depth 2 . Docs/Vault/BookStore
 ```
 
 List notes in a specific folder before naming a new sibling:
 
 ```bash
-fd --extension md . docs/vault/AtlasVault/05_Operations/Runbooks
+fd --extension md . Docs/Vault/BookStore/05_Operations/Runbooks
 ```
 
 ### Structure of `Home.md`
@@ -34,18 +34,18 @@ fd --extension md . docs/vault/AtlasVault/05_Operations/Runbooks
 
 ## Templates
 
-Templates live at `docs/vault/AtlasVault/07_Templates/`. The **authoritative source** is the vault itself — **always read templates at runtime**. Never use a cached copy from this skill.
+Templates live at `Docs/Vault/BookStore/07_Templates/`. The **authoritative source** is the vault itself — **always read templates at runtime**. Never use a cached copy from this skill.
 
 List all available templates:
 
 ```bash
-fd --extension md . docs/vault/AtlasVault/07_Templates
+fd --extension md . Docs/Vault/BookStore/07_Templates
 ```
 
 Read a specific template:
 
 ```bash
-cat docs/vault/AtlasVault/07_Templates/<template-file>.md
+cat Docs/Vault/BookStore/07_Templates/<template-file>.md
 ```
 
 ### Template selection by `type/*`
@@ -53,7 +53,7 @@ cat docs/vault/AtlasVault/07_Templates/<template-file>.md
 Map the chosen `type/*` to a template filename inside `07_Templates/`. Discover the mapping by listing the folder and matching the suffix against the type value:
 
 ```bash
-fd --extension md . docs/vault/AtlasVault/07_Templates
+fd --extension md . Docs/Vault/BookStore/07_Templates
 # Expect names like: template-<type>.md
 ```
 
@@ -77,21 +77,21 @@ Tags live in frontmatter as plain text. The **authoritative source** is `00_Inde
 Full file (recommended — also shows descriptions and grouping):
 
 ```bash
-cat docs/vault/AtlasVault/00_Index/Tags.md
+cat Docs/Vault/BookStore/00_Index/Tags.md
 ```
 
 Extract every tag value as plain text (deduplicated, sorted):
 
 ```bash
 rg -N --no-heading -o '`([a-z]+/[a-z0-9-]+)`' --replace '$1' \
-  docs/vault/AtlasVault/00_Index/Tags.md | sort -u
+  Docs/Vault/BookStore/00_Index/Tags.md | sort -u
 ```
 
 Extract values under a single prefix (example: `area/*`):
 
 ```bash
 awk '/^### area\/\*/{flag=1;next} /^### /{flag=0} flag' \
-  docs/vault/AtlasVault/00_Index/Tags.md \
+  Docs/Vault/BookStore/00_Index/Tags.md \
   | rg -o '`([a-z]+/[a-z0-9-]+)`' --replace '$1'
 ```
 
@@ -107,7 +107,7 @@ awk '/^### area\/\*/{flag=1;next} /^### /{flag=0} flag' \
 Before adding a new note, check the vault for overlap:
 
 ```bash
-cd docs/vault/AtlasVault
+cd Docs/Vault/BookStore
 rg -l --glob "*.md" --ignore-case --fixed-strings "<topic>" .
 ```
 

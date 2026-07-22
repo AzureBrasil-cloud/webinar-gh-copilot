@@ -1,6 +1,6 @@
 # Search Strategy
 
-Commands and strategy for keyword search over `docs/vault/AtlasVault/`. For vault structure, tag taxonomy, and note format, see `.github/instructions/vault.instructions.md`. Run all commands from the repo root.
+Commands and strategy for keyword search over `Docs/Vault/BookStore/`. For vault structure, tag taxonomy, and note format, see `.github/instructions/vault.instructions.md`. Run all commands from the repo root.
 
 ## Load reference data first
 
@@ -10,27 +10,27 @@ Tag values (deduplicated, sorted):
 
 ```bash
 rg -N --no-heading -o '`([a-z]+/[a-z0-9-]+)`' --replace '$1' \
-  docs/vault/AtlasVault/00_Index/Tags.md | sort -u
+  Docs/Vault/BookStore/00_Index/Tags.md | sort -u
 ```
 
 Values under one prefix (replace `area`):
 
 ```bash
 awk '/^### area\/\*/{flag=1;next} /^### /{flag=0} flag' \
-  docs/vault/AtlasVault/00_Index/Tags.md \
+  Docs/Vault/BookStore/00_Index/Tags.md \
   | rg -o '`([a-z]+/[a-z0-9-]+)`' --replace '$1'
 ```
 
 Navigation index (all notes + paths):
 
 ```bash
-cat docs/vault/AtlasVault/00_Index/Navigation.md
+cat Docs/Vault/BookStore/00_Index/Navigation.md
 ```
 
 List notes in a folder:
 
 ```bash
-fd --extension md . docs/vault/AtlasVault/<folder>
+fd --extension md . Docs/Vault/BookStore/<folder>
 ```
 
 ## Query Decomposition
@@ -69,7 +69,7 @@ rg -l \
   --glob "*.md" \
   --ignore-case \
   --fixed-strings "<tag-or-text-1>" \
-  docs/vault/AtlasVault \
+  Docs/Vault/BookStore \
 | xargs rg -l \
   --ignore-case \
   --fixed-strings "<tag-or-text-2>" \
@@ -92,7 +92,7 @@ If intersections return nothing, run each item independently and union the resul
 
 ```bash
 rg -l --glob "*.md" --ignore-case --fixed-strings "<tag-or-text>" \
-  docs/vault/AtlasVault \
+  Docs/Vault/BookStore \
 | xargs -I {} sh -c 'echo "\n===== {} ====="; cat "{}"'
 ```
 
@@ -100,7 +100,7 @@ rg -l --glob "*.md" --ignore-case --fixed-strings "<tag-or-text>" \
 
 ```bash
 rg -l --glob "*.md" --ignore-case --fixed-strings "<term>" \
-  docs/vault/AtlasVault \
+  Docs/Vault/BookStore \
   | head -n 5 \
   | xargs -I {} sh -c 'echo "\n===== {} ====="; cat "{}"'
 ```
@@ -128,13 +128,13 @@ Example — original `topic/sync` + `entity/contract` + `company` returned nothi
 ```bash
 # Round 1: swap tags for text
 rg -l --glob "*.md" --ignore-case --fixed-strings "distributor sync" \
-  docs/vault/AtlasVault \
+  Docs/Vault/BookStore \
 | xargs rg -l --ignore-case --fixed-strings "contract" \
 | xargs -I {} sh -c 'echo "\n===== {} ====="; cat "{}"'
 
 # Round 2: try new pair (skip middle term)
 rg -l --glob "*.md" --ignore-case --fixed-strings "sync" \
-  docs/vault/AtlasVault \
+  Docs/Vault/BookStore \
 | xargs rg -l --ignore-case --fixed-strings "company" \
 | xargs -I {} sh -c 'echo "\n===== {} ====="; cat "{}"'
 ```
@@ -150,7 +150,7 @@ After collecting matched notes, extract and validate `[[wikilinks]]` to find add
 
 2. **Resolve paths** — find the linked file in the vault:
    ```bash
-   fd --extension md --full-path "<Link-Name>" docs/vault/AtlasVault
+   fd --extension md --full-path "<Link-Name>" Docs/Vault/BookStore
    ```
 
 3. **Check relevance** — the linked note is relevant if it contains at least one of the original search terms (tags or text):

@@ -1,12 +1,12 @@
 ---
 name: vault-full-sync
-description: "Audit the Atlas Obsidian vault against the current codebase and reconcile drift. Use when: the user asks to sync the vault, verify vault accuracy, find missing or outdated docs, audit documentation, run a full vault check, reconcile vault with code, or after large refactors / merges. Produces a discrepancy report and applies vault updates to bring `docs/vault/AtlasVault/` back in sync. Orchestrates vault-search, vault-semantic-search, and vault-write."
+description: "Audit the BookStore Obsidian vault against the current codebase and reconcile drift. Use when: the user asks to sync the vault, verify vault accuracy, find missing or outdated docs, audit documentation, run a full vault check, reconcile vault with code, or after large refactors / merges. Produces a discrepancy report and applies vault updates to bring `Docs/Vault/BookStore/` back in sync. Orchestrates vault-search, vault-semantic-search, and vault-write."
 argument-hint: "Optional scope (e.g. area, component, folder) and any extra context, links, or code references"
 ---
 
 # Vault Full Sync
 
-End-to-end audit of `docs/vault/AtlasVault/` against the current state of the Atlas codebase. Identifies missing, outdated, or contradictory notes and reconciles them via `vault-write`. Always ends with a written report.
+End-to-end audit of `Docs/Vault/BookStore/` against the current state of the BookStore codebase. Identifies missing, outdated, or contradictory notes and reconciles them via `vault-write`. Always ends with a written report.
 
 ## Source of rules
 
@@ -49,7 +49,7 @@ Read the canonical sources for the scope, in this order:
 
 1. `docs/CONTEXT.md` — domain language and business rules.
 2. `docs/adr/` — accepted architectural decisions. Treat as authoritative.
-3. Codebase under `src/` — the implementation. Treat as authoritative for behavior.
+3. Codebase under `Src/` — the implementation. Treat as authoritative for behavior.
 4. User-provided `references` — official docs, snippets, links.
 
 Vault notes are NEVER the source of truth in this skill. They are the artifact being verified.

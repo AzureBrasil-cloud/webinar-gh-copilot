@@ -2,16 +2,16 @@
 
 > The tag values, folder names, and template filenames used below (e.g., `type/runbook`, `component/application`, `05_Operations`, `template-runbook.md`) are **illustrative only**. At runtime, valid values come from reading the live vault:
 >
-> - Tags → `docs/vault/AtlasVault/00_Index/Tags.md`
-> - Folders → `docs/vault/AtlasVault/00_Index/Home.md` + `fd --type d --max-depth 2 . docs/vault/AtlasVault`
-> - Templates → `fd --extension md . docs/vault/AtlasVault/07_Templates`
+> - Tags → `Docs/Vault/BookStore/00_Index/Tags.md`
+> - Folders → `Docs/Vault/BookStore/00_Index/Home.md` + `fd --type d --max-depth 2 . Docs/Vault/BookStore`
+> - Templates → `fd --extension md . Docs/Vault/BookStore/07_Templates`
 >
 > Substitute the real values from those reads when applying the patterns below.
 
 All examples assume the vault root is the current directory:
 
 ```bash
-cd docs/vault/AtlasVault
+cd Docs/Vault/BookStore
 ```
 
 ## Example 1: Add a single new guide
