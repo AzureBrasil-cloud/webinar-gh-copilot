@@ -28,6 +28,7 @@ Authoritative list of tags used across the BookStore vault. Read this file live 
 - `area/domain` — domain entities and business rules
 - `area/engineering` — code style and conventions
 - `area/operations` — build, run, test procedures
+- `area/project` — repository layout, dependencies, and project-level facts
 
 ### component/*
 
@@ -40,6 +41,7 @@ Authoritative list of tags used across the BookStore vault. Read this file live 
 
 - `entity/author` — `Author` domain entity
 - `entity/book` — `Book` domain entity
+- `entity/customer` — `Customer` domain entity
 
 ### Base
 

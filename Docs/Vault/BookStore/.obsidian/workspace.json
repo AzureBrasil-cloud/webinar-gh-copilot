@@ -178,8 +178,6 @@
   },
   "active": "3fe8aea96aa49eba",
   "lastOpenFiles": [
-    "04_Engineering",
-    "00_Index/Glossary.md",
     "06_References/Azure-App-Service-Docs.md",
     "06_References/Dotnet-Aspnetcore-Ef-Docs.md",
     "05_Operations/Deployment-Runbook.md",
@@ -195,6 +193,8 @@
     "02_Architecture/Architecture-Overview.md",
     "01_Project/Dependencies.md",
     "01_Project/Repository-Structure.md",
+    "04_Engineering",
+    "00_Index/Glossary.md",
     "07_Templates/Note-Template.md",
     "06_References/References-Overview.md",
     "06_References",

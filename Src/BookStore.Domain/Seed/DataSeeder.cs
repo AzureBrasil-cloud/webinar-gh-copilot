@@ -7,10 +7,16 @@ public static class DataSeeder
 {
     public static void Seed(BookStoreContext db)
     {
-        if (db.Authors.Any() || db.Books.Any())
-        {
+        SeedAuthors(db);
+        SeedBooks(db);
+        SeedCustomers(db);
+        db.SaveChanges();
+    }
+
+    private static void SeedAuthors(BookStoreContext db)
+    {
+        if (db.Authors.Any())
             return;
-        }
 
         var authors = new List<Author>
         {
@@ -27,6 +33,12 @@ public static class DataSeeder
         };
 
         db.Authors.AddRange(authors);
+    }
+
+    private static void SeedBooks(BookStoreContext db)
+    {
+        if (db.Books.Any())
+            return;
 
         static Book MakeBook(int id, int authorId, string title, string isbn, string genre, decimal price, int stock, DateTime publishedDate, string description, int numberOfPages)
         {
@@ -67,6 +79,30 @@ public static class DataSeeder
         };
 
         db.Books.AddRange(books);
-        db.SaveChanges();
+    }
+
+    private static void SeedCustomers(BookStoreContext db)
+    {
+        if (db.Customers.Any())
+            return;
+
+        static Customer MakeCustomer(int id, string fullName, string email, string? phoneNumber, DateTime createdAt)
+        {
+            var c = Customer.Create(fullName, email, phoneNumber);
+            c.Id = id;
+            c.CreatedAt = createdAt;
+            return c;
+        }
+
+        var customers = new List<Customer>
+        {
+            MakeCustomer(1, "Alice Johnson",  "alice.johnson@example.com",  "555-0101", new DateTime(2025, 1, 15, 9, 30, 0, DateTimeKind.Utc)),
+            MakeCustomer(2, "Bob Smith",      "bob.smith@example.com",      "555-0102", new DateTime(2025, 2, 20, 14, 15, 0, DateTimeKind.Utc)),
+            MakeCustomer(3, "Carol Williams", "carol.williams@example.com", null,       new DateTime(2025, 3, 10, 11, 0, 0, DateTimeKind.Utc)),
+            MakeCustomer(4, "David Brown",    "david.brown@example.com",    "555-0104", new DateTime(2025, 4, 5, 16, 45, 0, DateTimeKind.Utc)),
+            MakeCustomer(5, "Eva Garcia",     "eva.garcia@example.com",     "555-0105", new DateTime(2025, 5, 12, 8, 0, 0, DateTimeKind.Utc))
+        };
+
+        db.Customers.AddRange(customers);
     }
 }

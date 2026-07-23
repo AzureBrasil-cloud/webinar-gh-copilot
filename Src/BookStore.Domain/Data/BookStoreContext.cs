@@ -9,6 +9,7 @@ public class BookStoreContext : DbContext
 
     public DbSet<Author> Authors => Set<Author>();
     public DbSet<Book> Books => Set<Book>();
+    public DbSet<Customer> Customers => Set<Customer>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -33,6 +34,14 @@ public class BookStoreContext : DbContext
                 .WithMany(a => a.Books)
                 .HasForeignKey(b => b.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
+        });
+
+        modelBuilder.Entity<Customer>(entity =>
+        {
+            entity.HasKey(c => c.Id);
+            entity.Property(c => c.FullName).IsRequired().HasMaxLength(150);
+            entity.Property(c => c.Email).IsRequired().HasMaxLength(256);
+            entity.Property(c => c.PhoneNumber).HasMaxLength(50);
         });
     }
 }
