@@ -2,7 +2,7 @@
 
 **Goal:** use GitHub Copilot Agent Skills and an Obsidian knowledge vault as a persistent context source, so specialized agents can implement a full Customers CRUD (backend and frontend) with maximum accuracy - grounded in curated project notes instead of re-discovering the codebase every time.
 
-**Deliverable:** (1) the `Docs/Vault/BookStore/` vault populated with accurate context notes reconciled from the codebase, `full-doc.md`, and `deploy.sh`; (2) the `Developer-Specialist` and `Tester-Specialist` agents updated with a mandatory vault workflow (read instructions, search, semantic-search, implement, write back); (3) a working `Customer` CRUD across Domain, Application, and Web, implemented via Plan mode + the task-planner prompt, with each subtask grounded in the vault.
+**Deliverable:** (1) the `Docs/Vault/BookStore/` vault populated with accurate context notes reconciled from the codebase, `full-doc.md`, and `deploy.sh`; (2) the `Developer-Specialist` and `Tester-Specialist` agents updated with a mandatory vault workflow (read instructions, search, implement, write back); (3) a working `Customer` CRUD across Domain, Application, and Web, implemented via Plan mode + the task-planner prompt, with each subtask grounded in the vault.
 
 ---
 
@@ -52,7 +52,7 @@ Every time an agent touches the code, it re-discovers architecture, invariants, 
 
 The `Developer-Specialist` and `Tester-Specialist` agents from module 2 implement changes correctly, but they never read the vault before working, and never record what they learned afterward. The context stays stale and the vault never grows.
 
-**Fix:** update both agent definitions so that, before touching any code, they follow a mandatory flow: read `vault.instructions.md`, search the vault (`/vault-search`), semantic-search the vault (`/vault-semantic-search`), perform the task, then write back with `/vault-write` (creating new tags if needed).
+**Fix:** update both agent definitions so that, before touching any code, they follow a mandatory flow: read `vault.instructions.md`, search the vault (`/vault-search`), perform the task, then write back with `/vault-write` (creating new tags if needed).
 
 ### Problem 3 - There is no Customer feature
 
@@ -72,10 +72,9 @@ Agent Skills are folders of instructions, scripts, and resources (each defined b
 
 ### The vault skills (already created in this repo)
 
-The repository ships four skills under `.github/skills/` that treat the Obsidian vault as a first-class context store. Each is invocable as a slash command:
+The repository ships three skills under `.github/skills/` that treat the Obsidian vault as a first-class context store. Each is invocable as a slash command:
 
 - **`/vault-search`** - full-text keyword search over `Docs/Vault/BookStore/`. It loads the tag catalog and navigation index live, decomposes your query into 2-5 search items, and runs chained `rg` (ripgrep) intersection pipelines to find matching notes, following `[[wikilinks]]` one hop. Use it when you know the terms, tags, or keywords.
-- **`/vault-semantic-search`** - meaning-based search that uses the VS Code Copilot workspace index (`#codebase`). It expands your question with synonyms and domain vocabulary, then finds relevant notes even when you do not know the exact wording. Use it for conceptual questions or when keyword search comes up empty.
 - **`/vault-write`** - the only sanctioned way to write to the vault. It detects add-vs-update, picks the correct folder and note template, builds a `PascalCase-With-Dashes.md` filename, writes compliant frontmatter, cross-links via `[[wikilinks]]`, and keeps `Navigation.md` / `Tags.md` in sync. External links are placed only in `06_References/`.
 - **`/vault-full-sync`** - an end-to-end audit that diffs the whole vault against the codebase, classifies each note (missing, outdated, incomplete, orphaned, unlinked, mistagged, aligned), and reconciles drift by delegating writes to `/vault-write`. It always ends with a written report.
 
@@ -83,10 +82,7 @@ The repository ships four skills under `.github/skills/` that treat the Obsidian
 
 ### The search engine and write-back logic behind the skills
 
-The two search skills use different engines on purpose:
-
 - **Keyword engine (`/vault-search`)**: deterministic `rg --glob "*.md" --ignore-case --fixed-strings` pipelines scoped strictly to `Docs/Vault/BookStore/`. It reads the live tag catalog (`00_Index/Tags.md`) and navigation index (`00_Index/Navigation.md`) before searching, decomposes the query, intersects results across terms, falls back progressively when there are too few hits, and follows `[[wikilinks]]` one hop. It never fabricates content that is not in the vault.
-- **Semantic engine (`/vault-semantic-search`)**: rides the VS Code Copilot semantic index via `#codebase`. It finds notes by meaning, treats vault notes as the primary authority and code as supporting detail, and falls back to `/vault-search` if it finds nothing.
 - **Write-back logic (`/vault-write`)**: enforces the vault's structure so notes stay consistent no matter who (human or agent) contributes. It searches first to avoid duplicates, keeps notes atomic (one topic per note), never invents folders or tags silently (it updates `Tags.md` / `Home.md` in the same change), and keeps external links confined to `06_References/`. This is why the rule is: **always write to the vault through `/vault-write`** - never hand-edit notes.
 
 The net effect: the vault becomes a bidirectional context source for the agent - it **reads** curated notes to ground its work, and **writes** new notes back so future tasks are even better grounded.
@@ -178,21 +174,9 @@ List the agent skills defined in this repository that relate to the Obsidian vau
 For each one, tell me its name, what it does, and when I would use it.
 ```
 
-**Expected outcome:** Copilot lists `vault-search`, `vault-semantic-search`, `vault-write`, and `vault-full-sync`, describing each one's purpose.
+**Expected outcome:** Copilot lists `vault-search`, `vault-write`, and `vault-full-sync`, describing each one's purpose.
 
-### 0.5) The search engines behind the skills
-
-**Prompt:**
-
-```text
-Compare how the vault keyword search skill and the vault semantic search skill actually find notes.
-What underlying mechanism does each use, when should I prefer one over the other,
-and how do they fall back on each other?
-```
-
-**Expected outcome:** Copilot explains that keyword search uses ripgrep pipelines scoped to the vault while semantic search uses the `#codebase` index, and describes the fallback behavior between them.
-
-### 0.6) The write-back logic
+### 0.5) The write-back logic
 
 **Prompt:**
 
@@ -205,7 +189,7 @@ Why should everyone write to the vault only through this skill?
 
 **Expected outcome:** Copilot explains add-vs-update detection, folder/template/filename selection, `Navigation.md` and `Tags.md` maintenance, and why hand-editing would break consistency.
 
-### 0.7) The data sources for the vault
+### 0.6) The data sources for the vault
 
 **Prompt:**
 
@@ -217,7 +201,7 @@ and the vault rules file.
 
 **Expected outcome:** Copilot identifies the codebase under `Src/` as authoritative, `full-doc.md` as the maintained working document, and `vault.instructions.md` as the rulebook - and notes that vault notes themselves are never the source of truth.
 
-### 0.8) The production release process
+### 0.7) The production release process
 
 **Prompt:**
 
@@ -339,19 +323,6 @@ Now that the vault has content, practice retrieving it. These are read-only sear
 
 **Expected outcome:** the skill returns the `04_Engineering` pagination note describing `PagedResult<T>`, `GetPagedAsync`, and the default page size of 10.
 
-### 2.2) Semantic search example
-
-When you do not know the exact terms, use meaning-based search.
-
-**Prompt:**
-
-```text
-/vault-semantic-search How does the application enforce business rules and where does validation live
-across the layers?
-```
-
-**Expected outcome:** the skill uses the `#codebase` index to surface the architecture and domain notes explaining that invariants live in the entities (rich domain model) and services only orchestrate.
-
 ---
 
 ## Step 3 - Problem 2: Make the specialist agents vault-aware
@@ -369,7 +340,7 @@ vault afterward? If not, what mandatory steps should be added so every task read
 new context after?
 ```
 
-**Expected outcome:** Copilot confirms neither agent references the vault, and suggests adding a mandatory pre-work flow (read `vault.instructions.md`, `/vault-search`, `/vault-semantic-search`) and a post-work step (`/vault-write`).
+**Expected outcome:** Copilot confirms neither agent references the vault, and suggests adding a mandatory pre-work flow (read `vault.instructions.md`, `/vault-search`) and a post-work step (`/vault-write`).
 
 ### 3.2) Fix by updating both agent definitions
 
@@ -377,9 +348,8 @@ Add the mandatory vault workflow to each agent. You can edit the two `.agent.md`
 
 1. Read `.github/instructions/vault.instructions.md`.
 2. Use `/vault-search` to find relevant context notes in the vault.
-3. Use `/vault-semantic-search` to find additional context by meaning.
-4. Perform the task according to the agent's own instructions.
-5. Use `/vault-write` to write context back into the vault, creating new tags if needed.
+3. Perform the task according to the agent's own instructions.
+4. Use `/vault-write` to write context back into the vault, creating new tags if needed.
 
 **Prompt (Agent mode) to apply the change:**
 
@@ -391,9 +361,8 @@ Update both custom agents at .github/agents/developer-specialist.agent.md and
 The workflow, in order:
 1. Read .github/instructions/vault.instructions.md to load the vault rules.
 2. Run /vault-search to find relevant existing context notes for the task.
-3. Run /vault-semantic-search to find additional relevant notes by meaning.
-4. Perform the assigned task following the rest of this agent's instructions.
-5. Run /vault-write to record new or updated context notes about what changed,
+3. Perform the assigned task following the rest of this agent's instructions.
+4. Run /vault-write to record new or updated context notes about what changed,
    creating new tags in 00_Index/Tags.md if the taxonomy does not yet cover the topic.
 
 State clearly that writing to the vault must ONLY happen through /vault-write (never hand-edit notes),
@@ -423,13 +392,12 @@ You are a .NET domain expert for the BookStore solution. Your job is to implemen
 
 ## Mandatory Vault Workflow
 
-Before touching ANY code, and again after the task is complete, you MUST run this flow. Do not skip steps 1-3.
+Before touching ANY code, and again after the task is complete, you MUST run this flow. Do not skip steps 1-2.
 
 1. Read `.github/instructions/vault.instructions.md` to load the current vault rules.
 2. Run `/vault-search` to find relevant existing context notes for the task.
-3. Run `/vault-semantic-search` to find additional relevant notes by meaning.
-4. Perform the assigned task following the rest of this agent's instructions.
-5. Run `/vault-write` to record new or updated context notes about what changed, creating new tags in `00_Index/Tags.md` if the taxonomy does not yet cover the topic.
+3. Perform the assigned task following the rest of this agent's instructions.
+4. Run `/vault-write` to record new or updated context notes about what changed, creating new tags in `00_Index/Tags.md` if the taxonomy does not yet cover the topic.
 
 Writing to the vault MUST happen ONLY through `/vault-write` - never hand-edit vault notes.
 
@@ -487,13 +455,12 @@ You are a .NET testing expert for the BookStore solution. Your job is to create 
 
 ## Mandatory Vault Workflow
 
-Before writing ANY test code, and again after the task is complete, you MUST run this flow. Do not skip steps 1-3.
+Before writing ANY test code, and again after the task is complete, you MUST run this flow. Do not skip steps 1-2.
 
 1. Read `.github/instructions/vault.instructions.md` to load the current vault rules.
 2. Run `/vault-search` to find relevant existing context notes for the task.
-3. Run `/vault-semantic-search` to find additional relevant notes by meaning.
-4. Perform the assigned task following the rest of this agent's instructions.
-5. Run `/vault-write` to record new or updated context notes about what changed, creating new tags in `00_Index/Tags.md` if the taxonomy does not yet cover the topic.
+3. Perform the assigned task following the rest of this agent's instructions.
+4. Run `/vault-write` to record new or updated context notes about what changed, creating new tags in `00_Index/Tags.md` if the taxonomy does not yet cover the topic.
 
 Writing to the vault MUST happen ONLY through `/vault-write` - never hand-edit vault notes.
 
@@ -646,9 +613,9 @@ You should now see Customer-related context note(s) written back through `/vault
 
 | Step | Purpose | Copilot Mode | Outcome |
 |---|---|---|---|
-| **0** | Explore the vault, its rules, the skills, and the search engines | Ask mode (8 prompts) | Team alignment on how the vault and skills work - no changes |
+| **0** | Explore the vault, its rules, and the skills | Ask mode (7 prompts) | Team alignment on how the vault and skills work - no changes |
 | **1** | Populate the empty vault from code + `full-doc.md` + rules, including the `deploy.sh` runbook | Agent mode + `/vault-full-sync` | Vault content folders filled; deployment runbook created; indexes updated |
-| **2** | Retrieve notes from the populated vault | `/vault-search` + `/vault-semantic-search` | Confirmed the vault is searchable by keyword and by meaning |
+| **2** | Retrieve notes from the populated vault | `/vault-search` | Confirmed the vault is searchable by keyword |
 | **3** | Make specialist agents read and write the vault | Ask mode + agent-file edits | Both agents gain a mandatory vault workflow |
 | **4** | Build the Customer CRUD grounded in vault context | Plan mode + task-planner + subagents | Customer entity, service, controller, views, and tests implemented; new context written back |
 | **5** | Verify everything | Manual + `dotnet test` | CRUD works end to end, all tests pass, vault has grown |

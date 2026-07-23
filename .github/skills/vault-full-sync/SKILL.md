@@ -1,6 +1,6 @@
 ---
 name: vault-full-sync
-description: "Audit the BookStore Obsidian vault against the current codebase and reconcile drift. Use when: the user asks to sync the vault, verify vault accuracy, find missing or outdated docs, audit documentation, run a full vault check, reconcile vault with code, or after large refactors / merges. Produces a discrepancy report and applies vault updates to bring `Docs/Vault/BookStore/` back in sync. Orchestrates vault-search, vault-semantic-search, and vault-write."
+description: "Audit the BookStore Obsidian vault against the current codebase and reconcile drift. Use when: the user asks to sync the vault, verify vault accuracy, find missing or outdated docs, audit documentation, run a full vault check, reconcile vault with code, or after large refactors / merges. Produces a discrepancy report and applies vault updates to bring `Docs/Vault/BookStore/` back in sync. Orchestrates vault-search and vault-write."
 argument-hint: "Optional scope (e.g. area, component, folder) and any extra context, links, or code references"
 ---
 
@@ -58,8 +58,7 @@ For the chosen scope:
 
 1. Load `00_Index/Navigation.md`, `00_Index/Tags.md`, `00_Index/Home.md`, and `07_Templates/` live (do not cache).
 2. Run `vault-search` with the scope's keywords to collect all candidate notes.
-3. Run `vault-semantic-search` on the same scope to surface notes the keyword search may have missed.
-4. Build a list of `(note path, type, last updated, key claims)` covering the audited area.
+3. Build a list of `(note path, type, last updated, key claims)` covering the audited area.
 
 ### 5. Diff vault against code
 
