@@ -9,39 +9,29 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BookStore.Web.Web.styles.css" asp-append-version="true" />
 </head>
-<body>
-    <header>
-        <nav class="border-b border-surface bg-surface-0 mb-3">
-            <div class="container mx-auto flex flex-wrap items-center justify-between gap-3 px-4 py-3">
-                <a class="text-lg font-semibold text-color no-underline" asp-area="" asp-controller="Home" asp-action="Index">Book Store</a>
-                <ul class="flex flex-wrap items-center gap-4 text-sm">
-                    <li>
-                        <a class="text-color no-underline hover:text-primary" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                    </li>
-                    <li>
-                        <a class="text-color no-underline hover:text-primary" asp-area="" asp-controller="Books" asp-action="Index">Books</a>
-                    </li>
-                    <li>
-                        <a class="text-color no-underline hover:text-primary" asp-area="" asp-controller="Authors" asp-action="Index">Authors</a>
-                    </li>
-                    <li>
-                        <a class="text-color no-underline hover:text-primary" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
-            @RenderBody()
-        </main>
-    </div>
+<body class="bg-surface-100">
+    @{
+        var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    }
+    <div class="mx-auto flex max-w-350 items-start gap-3 p-4">
+        <div
+            id="sidebar-app"
+            data-active="@currentController"
+            data-home-url="@Url.Action("Index", "Home")"
+            data-books-url="@Url.Action("Index", "Books")"
+            data-authors-url="@Url.Action("Index", "Authors")"
+            data-customers-url="@Url.Action("Index", "Customers")"
+        ></div>
+        <div class="flex min-w-0 flex-1 flex-col">
+            <main role="main" class="pb-3">
+                @RenderBody()
+            </main>
 
-    <footer class="border-t border-surface text-muted-color">
-        <div class="container">
-            &copy; 2026 - BookStore.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            <footer class="border-t border-surface-300 py-3 text-sm text-muted-color">
+                &copy; 2026 - BookStore.Web - <a class="text-muted-color hover:text-primary" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            </footer>
         </div>
-    </footer>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script type="module" src="~/dist/main.js" asp-append-version="true"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
