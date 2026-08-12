@@ -50,6 +50,7 @@ Full list of notes in the BookStore vault, grouped by folder.
 
 - [[Dotnet-Aspnetcore-Ef-Docs]]
 - [[Azure-App-Service-Docs]]
+- [[MCP-Servers]]
 
 ## 07_Templates
 
