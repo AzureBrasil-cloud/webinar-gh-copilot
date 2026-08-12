@@ -2,28 +2,6 @@
     ViewData["Title"] = "Home Page";
 }
 
-<div class="text-center mb-5">
-    <h1 class="display-4">BookStore</h1>
-    <p class="lead">A sample .NET MVC project used in the GitHub Copilot webinar series.</p>
-</div>
-
-<div class="row g-4">
-    <div class="col-md-6">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Books</h5>
-                <p class="card-text">Browse and manage the catalog of books.</p>
-                <a class="btn btn-primary" asp-controller="Books" asp-action="Index">Open Books</a>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-6">
-        <div class="card h-100 shadow-sm">
-            <div class="card-body">
-                <h5 class="card-title">Authors</h5>
-                <p class="card-text">Browse and manage authors and their works.</p>
-                <a class="btn btn-primary" asp-controller="Authors" asp-action="Index">Open Authors</a>
-            </div>
-        </div>
-    </div>
-</div>
+<div id="home-app"
+     data-books-url="@Url.Action("Index", "Books")"
+     data-authors-url="@Url.Action("Index", "Authors")"></div>

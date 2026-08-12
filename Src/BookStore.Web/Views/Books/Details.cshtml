@@ -3,35 +3,35 @@
     ViewData["Title"] = "Book details";
 }
 
-<h1 class="h3 mb-3">@Model.Title</h1>
+<h1 class="text-2xl font-semibold text-color mb-3">@Model.Title</h1>
 
-<dl class="row">
-    <dt class="col-sm-3">Author</dt>
-    <dd class="col-sm-9">@Model.Author?.Name</dd>
+<dl class="grid grid-cols-12 gap-y-2 mb-4">
+    <dt class="col-span-3 font-medium text-color">Author</dt>
+    <dd class="col-span-9">@Model.Author?.Name</dd>
 
-    <dt class="col-sm-3">Genre</dt>
-    <dd class="col-sm-9">@Model.Genre</dd>
+    <dt class="col-span-3 font-medium text-color">Genre</dt>
+    <dd class="col-span-9">@Model.Genre</dd>
 
-    <dt class="col-sm-3">ISBN</dt>
-    <dd class="col-sm-9">@Model.Isbn</dd>
+    <dt class="col-span-3 font-medium text-color">ISBN</dt>
+    <dd class="col-span-9">@Model.Isbn</dd>
 
-    <dt class="col-sm-3">Price</dt>
-    <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
+    <dt class="col-span-3 font-medium text-color">Price</dt>
+    <dd class="col-span-9">@Model.Price.ToString("C")</dd>
 
-    <dt class="col-sm-3">Stock</dt>
-    <dd class="col-sm-9">@Model.Stock</dd>
+    <dt class="col-span-3 font-medium text-color">Stock</dt>
+    <dd class="col-span-9">@Model.Stock</dd>
 
-    <dt class="col-sm-3">Number of pages</dt>
-    <dd class="col-sm-9">@Model.NumberOfPages</dd>
+    <dt class="col-span-3 font-medium text-color">Number of pages</dt>
+    <dd class="col-span-9">@Model.NumberOfPages</dd>
 
-    <dt class="col-sm-3">Available</dt>
-    <dd class="col-sm-9">@(Model.IsAvailable ? "Yes" : "No")</dd>
+    <dt class="col-span-3 font-medium text-color">Available</dt>
+    <dd class="col-span-9">@(Model.IsAvailable ? "Yes" : "No")</dd>
 
-    <dt class="col-sm-3">Published</dt>
-    <dd class="col-sm-9">@Model.PublishedDate.ToString("yyyy-MM-dd")</dd>
+    <dt class="col-span-3 font-medium text-color">Published</dt>
+    <dd class="col-span-9">@Model.PublishedDate.ToString("yyyy-MM-dd")</dd>
 
-    <dt class="col-sm-3">Description</dt>
-    <dd class="col-sm-9">@Model.Description</dd>
+    <dt class="col-span-3 font-medium text-color">Description</dt>
+    <dd class="col-span-9">@Model.Description</dd>
 </dl>
 
 <a class="btn btn-secondary" asp-action="Index">Back</a>

@@ -3,19 +3,19 @@
     ViewData["Title"] = "Delete customer";
 }
 
-<h1 class="h3 mb-3 text-danger">Delete customer</h1>
-<div asp-validation-summary="ModelOnly" class="alert alert-danger d-none-empty"></div>
-<p>Are you sure you want to delete this customer?</p>
+<h1 class="text-2xl font-semibold text-red-600 mb-3">Delete customer</h1>
+<div asp-validation-summary="ModelOnly" class="alert-danger mb-3"></div>
+<p class="mb-3">Are you sure you want to delete this customer?</p>
 
-<dl class="row">
-    <dt class="col-sm-3">Full name</dt>
-    <dd class="col-sm-9">@Model.FullName</dd>
+<dl class="grid grid-cols-12 gap-y-2 mb-4">
+    <dt class="col-span-3 font-medium text-color">Full name</dt>
+    <dd class="col-span-9">@Model.FullName</dd>
 
-    <dt class="col-sm-3">Email</dt>
-    <dd class="col-sm-9">@Model.Email</dd>
+    <dt class="col-span-3 font-medium text-color">Email</dt>
+    <dd class="col-span-9">@Model.Email</dd>
 
-    <dt class="col-sm-3">Phone number</dt>
-    <dd class="col-sm-9">@Model.PhoneNumber</dd>
+    <dt class="col-span-3 font-medium text-color">Phone number</dt>
+    <dd class="col-span-9">@Model.PhoneNumber</dd>
 </dl>
 
 <form asp-action="Delete" method="post">

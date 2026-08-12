@@ -3,18 +3,18 @@
     ViewData["Title"] = "Delete book";
 }
 
-<h1 class="h3 mb-3 text-danger">Delete book</h1>
-<p>Are you sure you want to delete this book?</p>
+<h1 class="text-2xl font-semibold text-red-600 mb-3">Delete book</h1>
+<p class="mb-3">Are you sure you want to delete this book?</p>
 
-<dl class="row">
-    <dt class="col-sm-3">Title</dt>
-    <dd class="col-sm-9">@Model.Title</dd>
+<dl class="grid grid-cols-12 gap-y-2 mb-4">
+    <dt class="col-span-3 font-medium text-color">Title</dt>
+    <dd class="col-span-9">@Model.Title</dd>
 
-    <dt class="col-sm-3">Author</dt>
-    <dd class="col-sm-9">@Model.Author?.Name</dd>
+    <dt class="col-span-3 font-medium text-color">Author</dt>
+    <dd class="col-span-9">@Model.Author?.Name</dd>
 
-    <dt class="col-sm-3">Price</dt>
-    <dd class="col-sm-9">@Model.Price.ToString("C")</dd>
+    <dt class="col-span-3 font-medium text-color">Price</dt>
+    <dd class="col-span-9">@Model.Price.ToString("C")</dd>
 </dl>
 
 <form asp-action="Delete" method="post">

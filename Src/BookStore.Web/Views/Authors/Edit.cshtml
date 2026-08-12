@@ -3,27 +3,27 @@
     ViewData["Title"] = "Edit author";
 }
 
-<h1 class="h3 mb-3">Edit author</h1>
+<h1 class="text-2xl font-semibold text-color mb-3">Edit author</h1>
 
 <form asp-action="Edit" method="post">
     <input type="hidden" asp-for="Id" />
-    <div asp-validation-summary="ModelOnly" class="alert alert-danger d-none-empty"></div>
+    <div asp-validation-summary="ModelOnly" class="alert-danger mb-3"></div>
 
-    <div class="row g-3">
-        <div class="col-md-6">
+    <div class="grid grid-cols-12 gap-4">
+        <div class="col-span-12 md:col-span-6">
             <label asp-for="Name" class="form-label"></label>
             <input asp-for="Name" class="form-control" />
-            <span asp-validation-for="Name" class="text-danger"></span>
+            <span asp-validation-for="Name" class="text-red-600 text-sm"></span>
         </div>
-        <div class="col-md-3">
+        <div class="col-span-12 md:col-span-3">
             <label asp-for="Nationality" class="form-label"></label>
             <input asp-for="Nationality" class="form-control" />
         </div>
-        <div class="col-md-3">
+        <div class="col-span-12 md:col-span-3">
             <label asp-for="BirthDate" class="form-label">Birth date</label>
             <input asp-for="BirthDate" type="date" class="form-control" />
         </div>
-        <div class="col-12">
+        <div class="col-span-12">
             <label asp-for="Bio" class="form-label"></label>
             <textarea asp-for="Bio" rows="4" class="form-control"></textarea>
         </div>
