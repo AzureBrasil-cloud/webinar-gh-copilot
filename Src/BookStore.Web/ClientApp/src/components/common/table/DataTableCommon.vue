@@ -35,6 +35,8 @@ const props = withDefaults(
     detailsUrl?: string;
     editUrl?: string;
     deleteUrl?: string;
+    /** When true, the Delete action emits a `delete` event instead of navigating to deleteUrl. */
+    confirmDelete?: boolean;
   }>(),
   {
     rowsPerPageOptions: () => [10, 20, 50],
@@ -44,9 +46,9 @@ const props = withDefaults(
   },
 );
 
-defineEmits<{ page: [event: DataTablePageEvent] }>();
+const emit = defineEmits<{ page: [event: DataTablePageEvent]; delete: [data: any] }>();
 
-const hasActions = !!(props.detailsUrl || props.editUrl || props.deleteUrl);
+const hasActions = !!(props.detailsUrl || props.editUrl || props.deleteUrl || props.confirmDelete);
 
 const menu = ref();
 const menuItems = ref<MenuItem[]>([]);
@@ -59,8 +61,17 @@ function toggleMenu(event: Event, data: any) {
     ...(props.editUrl
       ? [{ label: "Edit", icon: "pi pi-pencil", command: () => (window.location.href = `${props.editUrl}/${data.id}`) }]
       : []),
-    ...(props.deleteUrl
-      ? [{ label: "Delete", icon: "pi pi-trash", command: () => (window.location.href = `${props.deleteUrl}/${data.id}`) }]
+    ...(props.deleteUrl || props.confirmDelete
+      ? [
+          {
+            label: "Delete",
+            icon: "pi pi-trash",
+            command: () => {
+              if (props.confirmDelete) emit("delete", data);
+              else window.location.href = `${props.deleteUrl}/${data.id}`;
+            },
+          },
+        ]
       : []),
   ];
   menu.value.toggle(event);

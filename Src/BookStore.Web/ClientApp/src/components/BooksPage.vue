@@ -8,7 +8,6 @@ const props = defineProps<{
   createUrl: string;
   detailsUrl: string;
   editUrl: string;
-  deleteUrl: string;
 }>();
 </script>
 
@@ -34,7 +33,6 @@ const props = defineProps<{
       :api-url="props.apiUrl"
       :details-url="props.detailsUrl"
       :edit-url="props.editUrl"
-      :delete-url="props.deleteUrl"
     />
   </div>
 </template>

@@ -2,7 +2,7 @@ import { ref } from "vue";
 import type { PagedResult } from "../types";
 
 export function usePagedFetch<T>(apiUrl: string) {
-  const items = ref<T[]>([]) as { value: T[] };
+  const items = ref<T[]>([]);
   const totalRecords = ref(0);
   const loading = ref(false);
   const error = ref<string | null>(null);

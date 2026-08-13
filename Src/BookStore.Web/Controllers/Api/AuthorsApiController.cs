@@ -1,4 +1,5 @@
 using BookStore.Application.Services;
+using BookStore.Domain.Exceptions;
 using BookStore.Web.Models.Api;
 using Microsoft.AspNetCore.Mvc;
 
@@ -39,5 +40,20 @@ public class AuthorsApiController : ControllerBase
         };
 
         return Ok(dto);
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        try
+        {
+            var deleted = await _authorService.DeleteAsync(id);
+            if (!deleted) return NotFound();
+            return NoContent();
+        }
+        catch (DomainException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 }

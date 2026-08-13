@@ -45,4 +45,12 @@ public class BooksApiController : ControllerBase
 
         return Ok(dto);
     }
+
+    [HttpDelete("{id}")]
+    public async Task<IActionResult> Delete(int id)
+    {
+        var deleted = await _bookService.DeleteAsync(id);
+        if (!deleted) return NotFound();
+        return NoContent();
+    }
 }

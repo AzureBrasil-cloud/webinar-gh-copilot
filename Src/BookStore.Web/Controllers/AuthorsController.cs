@@ -74,28 +74,4 @@ public class AuthorsController : Controller
             return View(author);
         }
     }
-
-    public async Task<IActionResult> Delete(int id)
-    {
-        var author = await _authorService.GetByIdAsync(id);
-        if (author is null) return NotFound();
-        return View(author);
-    }
-
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        try
-        {
-            await _authorService.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
-        }
-        catch (DomainException ex)
-        {
-            var author = await _authorService.GetByIdAsync(id);
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return View(author);
-        }
-    }
 }

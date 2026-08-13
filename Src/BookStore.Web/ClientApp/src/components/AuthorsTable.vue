@@ -3,6 +3,7 @@ import { onMounted, ref } from "vue";
 import { type DataTablePageEvent } from "primevue/datatable";
 import Message from "primevue/message";
 import DataTableCommon, { type DataTableColumn } from "./common/table/DataTableCommon.vue";
+import ConfirmDeleteDialog from "./common/dialog/ConfirmDeleteDialog.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
 import type { AuthorDto } from "../types";
 
@@ -10,7 +11,6 @@ const props = defineProps<{
   apiUrl: string;
   detailsUrl: string;
   editUrl: string;
-  deleteUrl: string;
 }>();
 
 const rows = ref(10);
@@ -35,6 +35,36 @@ function formatDate(value: string) {
   return new Date(value).toLocaleDateString("pt-BR");
 }
 
+const deleteDialogVisible = ref(false);
+const deleteTarget = ref<AuthorDto | null>(null);
+const deleteLoading = ref(false);
+const deleteError = ref<string | null>(null);
+
+function onDeleteRequest(data: AuthorDto) {
+  deleteTarget.value = data;
+  deleteError.value = null;
+  deleteDialogVisible.value = true;
+}
+
+async function onDeleteConfirm() {
+  if (!deleteTarget.value) return;
+  deleteLoading.value = true;
+  deleteError.value = null;
+  try {
+    const response = await fetch(`${props.apiUrl}/${deleteTarget.value.id}`, { method: "DELETE" });
+    if (!response.ok) {
+      const body = await response.json().catch(() => null);
+      throw new Error(body?.message ?? `Request failed with status ${response.status}`);
+    }
+    deleteDialogVisible.value = false;
+    await load(Math.floor(first.value / rows.value) + 1, rows.value);
+  } catch (err) {
+    deleteError.value = err instanceof Error ? err.message : "Failed to delete the author.";
+  } finally {
+    deleteLoading.value = false;
+  }
+}
+
 onMounted(() => load(1, rows.value));
 </script>
 
@@ -49,11 +79,30 @@ onMounted(() => load(1, rows.value));
     :rows="rows"
     :details-url="props.detailsUrl"
     :edit-url="props.editUrl"
-    :delete-url="props.deleteUrl"
+    confirm-delete
     @page="onPage"
+    @delete="onDeleteRequest"
   >
     <template #col-birthDate="{ data }">
       <span class="text-xs text-muted-color">{{ formatDate(data.birthDate) }}</span>
     </template>
   </DataTableCommon>
+
+  <ConfirmDeleteDialog
+    v-model:visible="deleteDialogVisible"
+    title="Delete Author"
+    message="Are you sure you want to delete this author?"
+    :details="
+      deleteTarget
+        ? [
+            { label: 'Name', value: deleteTarget.name },
+            { label: 'Nationality', value: deleteTarget.nationality },
+            { label: 'Books', value: String(deleteTarget.booksCount) },
+          ]
+        : []
+    "
+    :loading="deleteLoading"
+    :error="deleteError"
+    @confirm="onDeleteConfirm"
+  />
 </template>

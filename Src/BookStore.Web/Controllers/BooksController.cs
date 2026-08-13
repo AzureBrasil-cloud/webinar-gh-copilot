@@ -94,21 +94,6 @@ public class BooksController : Controller
         }
     }
 
-    public async Task<IActionResult> Delete(int id)
-    {
-        var book = await _bookService.GetByIdAsync(id);
-        if (book is null) return NotFound();
-        return View(book);
-    }
-
-    [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> DeleteConfirmed(int id)
-    {
-        await _bookService.DeleteAsync(id);
-        return RedirectToAction(nameof(Index));
-    }
-
     private async Task PopulateAuthorsAsync(int? selected = null)
     {
         var authors = await _authorService.GetAllAsync();
