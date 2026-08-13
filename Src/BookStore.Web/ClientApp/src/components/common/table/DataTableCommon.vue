@@ -153,7 +153,7 @@ function toggleMenu(event: Event, data: any) {
           </slot>
         </template>
       </Column>
-      <Column v-if="hasActions" header="Ações" class="text-center" style="width: 4rem">
+      <Column v-if="hasActions" header="Actions" class="text-center" style="width: 4rem">
         <template #body="{ data }">
           <Button text rounded severity="secondary" aria-haspopup="true" @click="toggleMenu($event, data)">
             <i class="pi pi-ellipsis-v" />
