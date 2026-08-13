@@ -589,9 +589,9 @@ and which ones if I open a Razor view or an API controller? Quote the applyTo pa
 
 ## Step 3 - Problem 3: Migrate to MVC + Vue 3 and rebuild Home from Figma
 
-### 3.1) Discover the gap (Ask mode)
+### 3.1) Discover the gap (Agent mode)
 
-Switch to **Ask** mode.
+Switch to **Agent** mode.
 
 **Prompt:**
 
@@ -616,6 +616,8 @@ Use the Frontend-Tooling-Specialist agent to migrate this .NET MVC project to MV
 installing and configuring PrimeVue and Tailwind CSS.
 Then use the Frontend-Specialist agent to migrate the Home page to the new format, matching this design:
 https://www.figma.com/design/2zyEr3S75NxHIJ5vgTFCWR/Prototype-%7C-BookStore?node-id=39-20049&t=kh0vKKSKWMHQICkj-4
+
+Add the side bar menu as well https://www.figma.com/design/2zyEr3S75NxHIJ5vgTFCWR/Prototype-%7C-BookStore?node-id=28-16662&t=kh0vKKSKWMHQICkj-4
 ```
 
 If you prefer full control, run it as two turns - select `Frontend-Tooling-Specialist` in the agent picker for the first half, then `Frontend-Specialist` for the second.
