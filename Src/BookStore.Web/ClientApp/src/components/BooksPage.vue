@@ -19,8 +19,12 @@ const props = defineProps<{
       description='"Manage the bookstore catalog: browse title, author, genre, price, stock and availability, and create, edit or remove entries."'
     >
       <template #actions>
-        <Button as="a" :href="props.createUrl" class="!bg-surface-700 !border-surface-700 hover:!bg-surface-800">
-          <i class="pi pi-plus" />
+        <Button
+          as="a"
+          :href="props.createUrl"
+          class="!gap-[7px] !rounded-md !border-surface-700 !bg-surface-700 !px-[11.5px] !py-2 !text-sm !font-medium hover:!bg-surface-800"
+        >
+          <i class="pi pi-plus text-xs" />
           New book
         </Button>
       </template>
