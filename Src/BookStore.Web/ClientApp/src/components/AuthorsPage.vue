@@ -22,7 +22,7 @@ const props = defineProps<{
         <Button
           as="a"
           :href="props.createUrl"
-          class="!gap-[7px] !rounded-md !border-surface-700 !bg-surface-700 !px-[11.5px] !py-2 !text-sm !font-medium hover:!bg-surface-800"
+          class="gap-1.75! rounded-md! border-surface-700! bg-surface-700! px-[11.5px]! py-2! text-sm! font-medium! hover:bg-surface-800!"
         >
           <i class="pi pi-plus text-xs" />
           New author

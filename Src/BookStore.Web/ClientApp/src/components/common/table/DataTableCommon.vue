@@ -16,7 +16,7 @@ type MenuItem = { label?: string; icon?: string; class?: string; separator?: boo
 
 const props = withDefaults(
   defineProps<{
-    value: Record<string, unknown>[];
+    value: any[];
     columns: DataTableColumn[];
     loading?: boolean;
     totalRecords?: number;
@@ -43,7 +43,7 @@ const hasActions = !!(props.detailsUrl || props.editUrl || props.deleteUrl);
 const menu = ref();
 const menuItems = ref<MenuItem[]>([]);
 
-function toggleMenu(event: Event, data: Record<string, unknown>) {
+function toggleMenu(event: Event, data: any) {
   menuItems.value = [
     ...(props.detailsUrl
       ? [{ label: "Details", icon: "pi pi-eye", command: () => (window.location.href = `${props.detailsUrl}/${data.id}`) }]
