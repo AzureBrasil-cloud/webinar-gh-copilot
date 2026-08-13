@@ -40,6 +40,7 @@ Full list of notes in the BookStore vault, grouped by folder.
 - [[Pagination]]
 - [[Controllers]]
 - [[Testing]]
+- [[Sidebar-Logo-Icon]]
 
 ## 05_Operations
 

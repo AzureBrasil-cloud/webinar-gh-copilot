@@ -45,3 +45,4 @@ These conventions keep the .NET 10 codebase consistent across Domain, Applicatio
 - [[Pagination]]
 - [[Controllers]]
 - [[Testing]]
+- [[Sidebar-Logo-Icon]]

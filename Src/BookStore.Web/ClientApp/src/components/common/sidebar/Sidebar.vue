@@ -24,7 +24,7 @@ const navItems = computed(() => [
   >
     <div class="flex w-full items-center gap-1.75 py-[17.5px]">
       <div class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-surface-300 bg-surface-0">
-        <img :src="'/images/home/books.gif'" alt="" class="size-6 rounded-md object-cover" />
+        <i class="pi pi-book text-2xl text-surface-700" />
       </div>
       <div class="flex min-w-0 flex-1 flex-col">
         <p class="truncate text-[22px] font-black leading-none text-surface-700">BookStore</p>
