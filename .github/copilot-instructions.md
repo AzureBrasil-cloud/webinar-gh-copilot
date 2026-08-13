@@ -4,8 +4,12 @@
 - .NET 10 multi-project solution under `Src/`.
   - `BookStore.Domain` - entities, `BookStoreContext` (EF Core In-Memory), seed data.
   - `BookStore.Application` - application services (orchestration only).
-  - `BookStore.Web` - ASP.NET Core 10 MVC (controllers, Razor views, Bootstrap 5).
+  - `BookStore.Web` - ASP.NET Core 10 MVC (controllers, Razor views) whose UI is rendered by Vue 3 + PrimeVue + Tailwind CSS v4 islands built from `ClientApp/`. Bootstrap has been removed; jQuery remains only for unobtrusive validation on the surviving Razor Customers forms.
 - No authentication.
+
+## Front-end
+- See `.github/instructions/frontend.instructions.md` (ClientApp: Vue/PrimeVue/Tailwind conventions) and `.github/instructions/web.instructions.md` (how MVC serves the Vue bundle and the `/api/*` contract).
+- `npm run build` in `Src/BookStore.Web/ClientApp` is required after any front-end change; it is not part of `dotnet build`.
 
 ## Architecture rules
 - **Domain layer** (`BookStore.Domain`) owns all business rules.

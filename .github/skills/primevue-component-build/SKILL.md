@@ -1,37 +1,52 @@
 ---
 name: primevue-component-build
-description: "Builds or updates Vue 3 SFC components for BookStore.Web using PrimeVue components, PrimeVue design tokens, Tailwind CSS v4 utilities, and PrimeIcons - and strips any leftover Bootstrap along the way. Use when: implementing a new component/dialog/table (often right after figma-discovery), restyling an existing component, or auditing a file for Bootstrap remnants."
+description: "Builds or updates Vue 3 SFC components for an MVC + Vue app using PrimeVue components, PrimeVue design tokens, Tailwind CSS v4 utilities, and PrimeIcons - and strips any leftover Bootstrap along the way. Use when: implementing a new component/dialog/table (often right after figma-discovery), restyling an existing component to match the design system, migrating a Razor page to Vue, or auditing a file for Bootstrap remnants."
 argument-hint: "The component to create/update and, if available, the figma-discovery report for it"
 ---
 
 # PrimeVue + Tailwind Component Build
 
-Implements a Vue 3 component (or restyles an existing one) so it matches the codebase's established PrimeVue-tokens + Tailwind + PrimeIcons conventions, with zero Bootstrap. Assumes a `figma-discovery` report exists if the work is design-driven; if not, work from the closest existing analogous component instead of inventing new patterns.
+Implements a Vue 3 component (or restyles an existing one) so it matches the codebase's established
+PrimeVue-tokens + Tailwind + PrimeIcons conventions, with zero Bootstrap. Assumes a `/figma-discovery`
+report exists when the work is design-driven; if not, work from the closest existing analogous component
+instead of inventing patterns.
+
+Full conventions live in `.github/instructions/frontend.instructions.md` (ClientApp) and
+`.github/instructions/web.instructions.md` (Razor mount points + API contract) - read them if anything below
+is ambiguous.
 
 ## Procedure
 
 1. **Place the file correctly.**
-   - Page-level composition (`PageHeader` + table + create dialog) → `components/<Feature>Page.vue`.
-   - Page-specific table wrapper → `components/<Feature>Table.vue`.
-   - Anything reused across 2+ entities/pages → `components/common/<category>/`, where `<category>` is `dialog`, `form`, `pageheader`, `sidebar`, or `table`. If none fit, ask before inventing a new category folder.
+   - Page-level composition (`PageHeader` + table + create dialog) -> `components/<Feature>Page.vue`.
+   - Page-specific table wrapper -> `components/<Feature>Table.vue`.
+   - Reused across 2+ entities/pages -> `components/common/<category>/`, where `<category>` is `dialog`, `form`, `pageheader`, `sidebar`, or `table`. If none fit, ask before inventing a category.
 2. **Reuse before creating.** Check these first and extend them instead of duplicating:
-   - `composables/useEntityCrud.ts` (delete/edit/details row-action state + fetch) and `composables/useCreateEntity.ts` (create-dialog state + POST) for any stateful CRUD logic.
-   - `styles/buttonStyles.ts` (`primaryButtonClass`/`secondaryButtonClass`/`dangerButtonClass`) for footer/action button classes.
-   - `components/common/dialog/dialogStyles.ts` (`dialogShellPt`/`detailsDialogPt`) for any new Dialog's `pt` shell.
-   - `components/common/form/FormField.vue` (editable label+input) / `DetailField.vue` (read-only label+value) for labeled fields.
+   - `composables/usePagedFetch.ts` (paged list fetch: `items`, `totalRecords`, `loading`, `error`, `load(page, pageSize)`).
+   - `composables/useEntityCrud.ts` (delete/edit/details row-action state + fetch) and `composables/useCreateEntity.ts` (create-dialog state + POST).
+   - `styles/buttonStyles.ts` (`primaryButtonClass`/`secondaryButtonClass`/`dangerButtonClass`).
+   - `components/common/dialog/dialogStyles.ts` (`dialogShellPt(width, contentClass?)`/`detailsDialogPt(width)`).
+   - `components/common/table/DataTableCommon.vue` for any list (columns, `#col-<field>` slots, row-action menu; actions either navigate via `detailsUrl`/`editUrl`/`deleteUrl` or emit via `confirmDetails`/`confirmEdit`/`confirmDelete`).
+   - `components/common/form/FormField.vue` (editable label + input) / `DetailField.vue` (read-only label + value); `components/common/pageheader/PageHeader.vue` for the title + `#actions` slot.
    - `utils/format.ts` (`formatCurrency`, `formatDate`) for any pt-BR/BRL formatting.
-3. **Apply PrimeVue design tokens for color** - never a raw hex value. Use `surface-0/300/700/800`, `text-color`, `text-muted-color`, `border-surface-300`, etc. (see the token table in the `figma-discovery` skill if translating from a Figma spec).
-4. **Style through `pt` (passthrough) sections** for components that expose them (`Dialog`, `DataTable`, `Paginator`, `Button` state overrides) rather than a bare `class` - matches every existing dialog/table in this codebase.
-5. **Apply Tailwind utilities for layout/spacing**, using arbitrary values (`w-[765px]`, `rounded-[21px]`, `gap-1.75`) when the Figma/design spec doesn't land on Tailwind's default scale - this is the established convention here, not a workaround to avoid.
-6. **`!important` syntax:** always postfix (`bg-surface-700!`, `text-color!`), never prefix (`!bg-surface-700`). Only add `!` when overriding a PrimeVue component's OWN theme-colored state class (e.g. `.p-paginator-page-selected`, default Button primary color) - plain layout/spacing `pt` classes never need it.
-7. **Icons:** use PrimeIcons (`<i class="pi pi-*">` or a component's `icon` prop) exclusively. Never add Bootstrap Icons (`bi`/`bi-*`) or a new inline SVG when an equivalent `pi-*` glyph exists.
-8. **Bootstrap audit (always run before finishing):** grep the touched files and `Src/BookStore.Web/**` (excluding `node_modules`/`wwwroot/dist`) for `bootstrap|bi-|bi bi-|cdn.jsdelivr.net/npm/bootstrap`. Some Razor views legitimately use class names like `btn`, `btn-primary`, `form-control`, `alert-danger` - these are custom `@layer components` Tailwind classes defined in `src/style.css` with the same names as the old Bootstrap classes, NOT real Bootstrap; leave them alone. Only remove genuine Bootstrap CSS/JS `<link>`/`<script>` tags, the `wwwroot/lib/bootstrap/` folder, or `bi bi-*` icon usages if found.
-9. **Verify.** From `Src/BookStore.Web/ClientApp`: run `npx vue-tsc --noEmit` then `npm run build`; fix all errors before finishing. If a `.cshtml` mount point or a Controller/Api DTO changed, also run `dotnet build Src/BookStore.slnx`.
+3. **Respect the mount contract.** Props coming from a Razor mount point arrive as strings from `el.dataset` (`data-api-url` -> `apiUrl`); declare them `string` and parse numbers/booleans inside the component. Never hardcode an API or route URL. A new page also needs a `mount(<Feature>Page, "#<feature>-app")` line in `src/main.ts` and the matching `<div>` in the `.cshtml`.
+4. **Apply PrimeVue design tokens for color** - never a raw hex: `surface-0/50/100/300/500/700/800`, `text-color`, `text-muted-color`, `border-surface-300`, `bg-primary`, `text-primary-contrast`. See the token table in `/figma-discovery` when translating a Figma spec.
+5. **Style through `pt` (passthrough) sections** for components that expose them (`Dialog`, `DataTable`, `Paginator`, `Menu`, `Button` state overrides) rather than a bare `class` - this matches every existing dialog/table here.
+6. **Apply Tailwind utilities for layout/spacing**, using arbitrary values (`w-[765px]`, `rounded-[21px]`, `gap-1.75`) when the design does not land on Tailwind's default scale - established convention, not a workaround.
+7. **`!important` syntax:** always postfix (`bg-surface-700!`), never prefix. Only when overriding a PrimeVue component's OWN theme-colored state class (`.p-paginator-page-selected`, default Button primary); plain layout/spacing `pt` classes never need it.
+8. **Icons and assets:** PrimeIcons only (`<i class="pi pi-*">` or a component's `icon` prop). Figma-exported images go to `wwwroot/images/<page>/` and are referenced by absolute URL.
+9. **Data and errors:** lists are `lazy` + `paginator` against `/api/*` (server-side paging only). API failures return `{ "message": "..." }`; surface it with a PrimeVue `Message severity="error"`, never `alert()`. Keep `types.ts` in sync with the C# DTOs.
+10. **Bootstrap audit (always before finishing):** grep the touched files and `Src/BookStore.Web/**` (excluding `node_modules`, `wwwroot/dist`, `bin`, `obj`) for `bootstrap|bi-|cdn.jsdelivr.net/npm/bootstrap`. Razor views legitimately use `btn`, `btn-primary`, `form-control`, `alert-danger` - these are custom `@layer components` Tailwind classes defined in `src/style.css` with the same names as the old Bootstrap ones, NOT real Bootstrap; leave them alone. Remove only genuine Bootstrap `<link>`/`<script>` tags, a `wwwroot/lib/bootstrap/` folder, or `bi bi-*` icon usages.
+11. **Verify.** From `Src/BookStore.Web/ClientApp`: `npx vue-tsc --noEmit`, then `npm run build`; fix all errors. If a `.cshtml` mount point or an API DTO changed, also run `dotnet build Src/BookStore.slnx`. Commit the regenerated `wwwroot/dist` with the change, then load the page (`dotnet run --project Src/BookStore.Web`, `http://localhost:5045`) and compare against the design.
+12. **Record it.** The calling agent must run `/vault-write` afterwards with the component(s) changed, the Figma node implemented, and any new token mapping or shared helper extracted.
 
 ## Rules
 
 - Never hardcode a color that already has a `surface-*`/`*-color` token equivalent.
-- Never duplicate a Tailwind class string, `pt` config object, or fetch/loading/error state machine that already exists in `styles/`, `common/dialog/dialogStyles.ts`, or `composables/` - import and reuse it, or extend it if the existing helper is close but not quite sufficient.
-- Never introduce Bootstrap, jQuery-Bootstrap plugins, or `bi bi-*` icons - PrimeVue + Tailwind + PrimeIcons is the only sanctioned UI stack.
-- Never introduce a second JS framework - Vue 3 is the only sanctioned front-end framework here.
+- Never duplicate a Tailwind class string, `pt` config object, or fetch/loading/error state machine that already exists in `styles/`, `common/dialog/dialogStyles.ts`, or `composables/` - import and reuse, or extend it.
+- Never introduce Bootstrap, jQuery-Bootstrap plugins, or `bi bi-*` icons - PrimeVue + Tailwind + PrimeIcons only.
+- Never introduce a second JS framework, a client-side router, or a global store - Vue 3 islands mounted by `main.ts`; MVC owns navigation.
+- Never paginate client-side.
+- Never change `vite.config.ts`, `package.json` or `.vscode/mcp.json` from this skill - that is Frontend-Tooling-Specialist's scope.
+- Never delete a Razor CRUD view as a side effect of migrating its list page - ask first.
 - Never skip the `vue-tsc --noEmit` + `npm run build` verification step.
