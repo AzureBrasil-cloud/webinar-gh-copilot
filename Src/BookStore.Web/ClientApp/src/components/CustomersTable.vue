@@ -4,6 +4,7 @@ import { type DataTablePageEvent } from "primevue/datatable";
 import Message from "primevue/message";
 import DataTableCommon, { type DataTableColumn } from "./common/table/DataTableCommon.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
+import { formatDate } from "../utils/format";
 import type { CustomerDto } from "../types";
 
 const props = defineProps<{
@@ -28,10 +29,6 @@ function onPage(event: DataTablePageEvent) {
   first.value = event.first;
   rows.value = event.rows;
   load(event.page + 1, event.rows);
-}
-
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("pt-BR");
 }
 
 onMounted(() => load(1, rows.value));

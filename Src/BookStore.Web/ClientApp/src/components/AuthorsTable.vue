@@ -7,6 +7,8 @@ import ConfirmDeleteDialog from "./common/dialog/ConfirmDeleteDialog.vue";
 import EditAuthorDialog, { type EditAuthorPayload } from "./common/dialog/EditAuthorDialog.vue";
 import DetailsAuthorDialog from "./common/dialog/DetailsAuthorDialog.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
+import { useEntityCrud } from "../composables/useEntityCrud";
+import { formatDate } from "../utils/format";
 import type { AuthorDto } from "../types";
 
 const props = defineProps<{
@@ -31,86 +33,33 @@ function onPage(event: DataTablePageEvent) {
   load(event.page + 1, event.rows);
 }
 
-function formatDate(value: string) {
-  return new Date(value).toLocaleDateString("pt-BR");
-}
-
-const deleteDialogVisible = ref(false);
-const deleteTarget = ref<AuthorDto | null>(null);
-const deleteLoading = ref(false);
-const deleteError = ref<string | null>(null);
-
-function onDeleteRequest(data: AuthorDto) {
-  deleteTarget.value = data;
-  deleteError.value = null;
-  deleteDialogVisible.value = true;
-}
-
-async function onDeleteConfirm() {
-  if (!deleteTarget.value) return;
-  deleteLoading.value = true;
-  deleteError.value = null;
-  try {
-    const response = await fetch(`${props.apiUrl}/${deleteTarget.value.id}`, { method: "DELETE" });
-    if (!response.ok) {
-      const body = await response.json().catch(() => null);
-      throw new Error(body?.message ?? `Request failed with status ${response.status}`);
-    }
-    deleteDialogVisible.value = false;
-    await load(Math.floor(first.value / rows.value) + 1, rows.value);
-  } catch (err) {
-    deleteError.value = err instanceof Error ? err.message : "Failed to delete the author.";
-  } finally {
-    deleteLoading.value = false;
-  }
-}
-
-const editDialogVisible = ref(false);
-const editTarget = ref<AuthorDto | null>(null);
-const editLoading = ref(false);
-const editError = ref<string | null>(null);
-
-function onEditRequest(data: AuthorDto) {
-  editTarget.value = data;
-  editError.value = null;
-  editDialogVisible.value = true;
-}
-
-async function onEditSubmit(payload: EditAuthorPayload) {
-  if (!editTarget.value) return;
-  editLoading.value = true;
-  editError.value = null;
-  try {
-    const response = await fetch(`${props.apiUrl}/${editTarget.value.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      const body = await response.json().catch(() => null);
-      throw new Error(body?.message ?? `Request failed with status ${response.status}`);
-    }
-    editDialogVisible.value = false;
-    await load(Math.floor(first.value / rows.value) + 1, rows.value);
-  } catch (err) {
-    editError.value = err instanceof Error ? err.message : "Failed to update the author.";
-  } finally {
-    editLoading.value = false;
-  }
-}
-
-const detailsDialogVisible = ref(false);
-const detailsTarget = ref<AuthorDto | null>(null);
-
-function onDetailsRequest(data: AuthorDto) {
-  detailsTarget.value = data;
-  detailsDialogVisible.value = true;
-}
+const {
+  deleteDialogVisible,
+  deleteTarget,
+  deleteLoading,
+  deleteError,
+  onDeleteRequest,
+  onDeleteConfirm,
+  editDialogVisible,
+  editTarget,
+  editLoading,
+  editError,
+  onEditRequest,
+  onEditSubmit,
+  detailsDialogVisible,
+  detailsTarget,
+  onDetailsRequest,
+} = useEntityCrud<AuthorDto, EditAuthorPayload>({
+  apiUrl: props.apiUrl,
+  entityLabel: "author",
+  reload: () => load(Math.floor(first.value / rows.value) + 1, rows.value),
+});
 
 onMounted(() => load(1, rows.value));
 
 defineExpose({ reload: () => load(1, rows.value) });
 </script>
+
 
 <template>
   <Message v-if="error" severity="error" :closable="false" class="mb-4">{{ error }}</Message>

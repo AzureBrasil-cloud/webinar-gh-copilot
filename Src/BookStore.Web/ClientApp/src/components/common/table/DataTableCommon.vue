@@ -26,17 +26,17 @@ const menuPt = {
 // highlight on the active page (just bolder text), plain-bordered rows-per-page select.
 // `!` overrides are required because PrimeVue's runtime style tag is injected after Tailwind's,
 // so equal-specificity utility classes would otherwise lose to the theme's default page/button colors.
-const navButtonPt = { class: "h-[35px] w-[35px] rounded-full !bg-transparent text-muted-color hover:!bg-surface-100 hover:!text-color" };
+const navButtonPt = { class: "h-[35px] w-[35px] rounded-full bg-transparent! text-muted-color hover:bg-surface-100! hover:text-color!" };
 const paginatorPt = {
-  root: { class: "justify-end gap-[3.5px] rounded-none !bg-transparent px-3.5 py-1.75" },
+  root: { class: "justify-end gap-[3.5px] rounded-none bg-transparent! px-3.5 py-1.75" },
   first: navButtonPt,
   prev: navButtonPt,
   next: navButtonPt,
   last: navButtonPt,
   page: ({ context }: { context: { active: boolean } }) => ({
     class: [
-      "h-[35px] w-[35px] rounded-full !bg-transparent text-sm hover:!bg-surface-100",
-      context.active ? "font-semibold !text-color" : "font-normal !text-muted-color",
+      "h-[35px] w-[35px] rounded-full bg-transparent! text-sm hover:bg-surface-100!",
+      context.active ? "font-semibold text-color!" : "font-normal text-muted-color!",
     ],
   }),
   pcRowPerPageDropdown: {

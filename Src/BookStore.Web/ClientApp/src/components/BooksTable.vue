@@ -8,6 +8,8 @@ import ConfirmDeleteDialog from "./common/dialog/ConfirmDeleteDialog.vue";
 import EditBookDialog, { type EditBookPayload } from "./common/dialog/EditBookDialog.vue";
 import DetailsBookDialog from "./common/dialog/DetailsBookDialog.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
+import { useEntityCrud } from "../composables/useEntityCrud";
+import { formatCurrency } from "../utils/format";
 import type { AuthorOption, BookDto } from "../types";
 
 const props = defineProps<{
@@ -35,83 +37,33 @@ function onPage(event: DataTablePageEvent) {
   load(event.page + 1, event.rows);
 }
 
-function formatCurrency(value: number) {
-  return new Intl.NumberFormat("pt-BR", { style: "currency", currency: "BRL" }).format(value);
-}
-
-const deleteDialogVisible = ref(false);
-const deleteTarget = ref<BookDto | null>(null);
-const deleteLoading = ref(false);
-const deleteError = ref<string | null>(null);
-
-function onDeleteRequest(data: BookDto) {
-  deleteTarget.value = data;
-  deleteError.value = null;
-  deleteDialogVisible.value = true;
-}
-
-async function onDeleteConfirm() {
-  if (!deleteTarget.value) return;
-  deleteLoading.value = true;
-  deleteError.value = null;
-  try {
-    const response = await fetch(`${props.apiUrl}/${deleteTarget.value.id}`, { method: "DELETE" });
-    if (!response.ok) throw new Error(`Request failed with status ${response.status}`);
-    deleteDialogVisible.value = false;
-    await load(Math.floor(first.value / rows.value) + 1, rows.value);
-  } catch (err) {
-    deleteError.value = err instanceof Error ? err.message : "Failed to delete the book.";
-  } finally {
-    deleteLoading.value = false;
-  }
-}
-
-const editDialogVisible = ref(false);
-const editTarget = ref<BookDto | null>(null);
-const editLoading = ref(false);
-const editError = ref<string | null>(null);
-
-function onEditRequest(data: BookDto) {
-  editTarget.value = data;
-  editError.value = null;
-  editDialogVisible.value = true;
-}
-
-async function onEditSubmit(payload: EditBookPayload) {
-  if (!editTarget.value) return;
-  editLoading.value = true;
-  editError.value = null;
-  try {
-    const response = await fetch(`${props.apiUrl}/${editTarget.value.id}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      const body = await response.json().catch(() => null);
-      throw new Error(body?.message ?? `Request failed with status ${response.status}`);
-    }
-    editDialogVisible.value = false;
-    await load(Math.floor(first.value / rows.value) + 1, rows.value);
-  } catch (err) {
-    editError.value = err instanceof Error ? err.message : "Failed to update the book.";
-  } finally {
-    editLoading.value = false;
-  }
-}
-
-const detailsDialogVisible = ref(false);
-const detailsTarget = ref<BookDto | null>(null);
-
-function onDetailsRequest(data: BookDto) {
-  detailsTarget.value = data;
-  detailsDialogVisible.value = true;
-}
+const {
+  deleteDialogVisible,
+  deleteTarget,
+  deleteLoading,
+  deleteError,
+  onDeleteRequest,
+  onDeleteConfirm,
+  editDialogVisible,
+  editTarget,
+  editLoading,
+  editError,
+  onEditRequest,
+  onEditSubmit,
+  detailsDialogVisible,
+  detailsTarget,
+  onDetailsRequest,
+} = useEntityCrud<BookDto, EditBookPayload>({
+  apiUrl: props.apiUrl,
+  entityLabel: "book",
+  reload: () => load(Math.floor(first.value / rows.value) + 1, rows.value),
+});
 
 onMounted(() => load(1, rows.value));
 
 defineExpose({ reload: () => load(1, rows.value) });
 </script>
+
 
 
 <template>

@@ -4,6 +4,8 @@ import PageHeader from "./common/pageheader/PageHeader.vue";
 import AuthorsTable from "./AuthorsTable.vue";
 import CreateAuthorDialog, { type CreateAuthorPayload } from "./common/dialog/CreateAuthorDialog.vue";
 import Button from "primevue/button";
+import { primaryButtonClass } from "../styles/buttonStyles";
+import { useCreateEntity } from "../composables/useCreateEntity";
 
 const props = defineProps<{
   apiUrl: string;
@@ -11,36 +13,17 @@ const props = defineProps<{
 
 const authorsTable = ref<InstanceType<typeof AuthorsTable> | null>(null);
 
-const createDialogVisible = ref(false);
-const createLoading = ref(false);
-const createError = ref<string | null>(null);
-
-function openCreate() {
-  createError.value = null;
-  createDialogVisible.value = true;
-}
-
-async function onCreateSubmit(payload: CreateAuthorPayload) {
-  createLoading.value = true;
-  createError.value = null;
-  try {
-    const response = await fetch(props.apiUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
-    if (!response.ok) {
-      const body = await response.json().catch(() => null);
-      throw new Error(body?.message ?? `Request failed with status ${response.status}`);
-    }
-    createDialogVisible.value = false;
-    await authorsTable.value?.reload();
-  } catch (err) {
-    createError.value = err instanceof Error ? err.message : "Failed to create the author.";
-  } finally {
-    createLoading.value = false;
-  }
-}
+const {
+  visible: createDialogVisible,
+  loading: createLoading,
+  error: createError,
+  open: openCreate,
+  submit: onCreateSubmit,
+} = useCreateEntity<CreateAuthorPayload>({
+  apiUrl: props.apiUrl,
+  entityLabel: "author",
+  onCreated: () => authorsTable.value?.reload(),
+});
 </script>
 
 <template>
@@ -51,7 +34,7 @@ async function onCreateSubmit(payload: CreateAuthorPayload) {
     >
       <template #actions>
         <Button
-          class="gap-1.75! rounded-md! border-surface-700! bg-surface-700! px-[11.5px]! py-2! text-sm! font-medium! hover:bg-surface-800!"
+          :class="primaryButtonClass"
           @click="openCreate"
         >
           <i class="pi pi-plus text-xs" />

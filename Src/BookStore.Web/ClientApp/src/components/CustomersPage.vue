@@ -2,6 +2,7 @@
 import PageHeader from "./common/pageheader/PageHeader.vue";
 import CustomersTable from "./CustomersTable.vue";
 import Button from "primevue/button";
+import { primaryButtonClass } from "../styles/buttonStyles";
 
 const props = defineProps<{
   apiUrl: string;
@@ -22,7 +23,7 @@ const props = defineProps<{
         <Button
           as="a"
           :href="props.createUrl"
-          class="gap-1.75! rounded-md! border-surface-700! bg-surface-700! px-[11.5px]! py-2! text-sm! font-medium! hover:bg-surface-800!"
+          :class="primaryButtonClass"
         >
           <i class="pi pi-plus text-xs" />
           New customer

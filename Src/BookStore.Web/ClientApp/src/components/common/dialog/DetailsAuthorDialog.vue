@@ -2,6 +2,7 @@
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import DetailField from "../form/DetailField.vue";
+import { detailsDialogPt, dialogSecondaryButtonClass } from "./dialogStyles";
 import type { AuthorDto } from "../../../types";
 
 defineProps<{
@@ -15,6 +16,8 @@ const emit = defineEmits<{ "update:visible": [value: boolean] }>();
 function formatIsoDate(value: string) {
   return value.slice(0, 10);
 }
+
+const dialogPt = detailsDialogPt("w-[520px]");
 </script>
 
 <template>
@@ -24,12 +27,7 @@ function formatIsoDate(value: string) {
     modal
     dismissable-mask
     :draggable="false"
-    :pt="{
-      root: { class: 'w-[520px] max-w-[92vw] rounded-[21px] border border-surface-300 bg-surface-0 p-0 overflow-hidden' },
-      header: { class: 'h-[67px] items-center justify-between pt-5 pb-4 pl-6 pr-4' },
-      content: { class: 'flex flex-col gap-1.75 px-[21px] py-[17.5px]' },
-      footer: { class: 'gap-3 justify-end pb-5 pt-4 px-6' },
-    }"
+    :pt="dialogPt"
   >
     <template #header>
       <span class="text-[21px] font-bold text-color">Details</span>
@@ -83,7 +81,7 @@ function formatIsoDate(value: string) {
         label="Close"
         severity="secondary"
         outlined
-        class="gap-1.75! rounded-md! border-surface-300! px-[11.5px]! py-2! text-sm! font-medium!"
+        :class="dialogSecondaryButtonClass"
         @click="emit('update:visible', false)"
       />
     </template>

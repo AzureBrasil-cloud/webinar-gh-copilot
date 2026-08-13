@@ -2,6 +2,7 @@
 import Dialog from "primevue/dialog";
 import Button from "primevue/button";
 import Message from "primevue/message";
+import { dialogShellPt, dialogSecondaryButtonClass, dialogDangerButtonClass } from "./dialogStyles";
 
 export interface ConfirmDeleteDetail {
   label: string;
@@ -23,6 +24,8 @@ function onUpdateVisible(value: boolean) {
   emit("update:visible", value);
   if (!value) emit("cancel");
 }
+
+const dialogPt = dialogShellPt("w-[765px]");
 </script>
 
 <template>
@@ -34,12 +37,7 @@ function onUpdateVisible(value: boolean) {
     :closable="!loading"
     :close-on-escape="!loading"
     :draggable="false"
-    :pt="{
-      root: { class: 'w-[765px] max-w-[92vw] rounded-[21px] border border-surface-300 bg-surface-0 p-0 overflow-hidden' },
-      header: { class: 'h-[67px] items-center justify-between pt-5 pb-4 pl-6 pr-4' },
-      content: { class: 'flex flex-col gap-[21px] px-6 py-2' },
-      footer: { class: 'gap-3 justify-end pb-5 pt-4 px-6' },
-    }"
+    :pt="dialogPt"
   >
     <template #header>
       <span class="text-[21px] font-bold text-color">{{ props.title }}</span>
@@ -65,14 +63,14 @@ function onUpdateVisible(value: boolean) {
         severity="secondary"
         outlined
         :disabled="loading"
-        class="gap-1.75! rounded-md! border-surface-300! px-[11.5px]! py-2! text-sm! font-medium!"
+        :class="dialogSecondaryButtonClass"
         @click="onUpdateVisible(false)"
       />
       <Button
         label="Delete"
         severity="danger"
         :loading="loading"
-        class="gap-1.75! rounded-md! px-[11.5px]! py-2! text-sm! font-medium!"
+        :class="dialogDangerButtonClass"
         @click="emit('confirm')"
       />
     </template>

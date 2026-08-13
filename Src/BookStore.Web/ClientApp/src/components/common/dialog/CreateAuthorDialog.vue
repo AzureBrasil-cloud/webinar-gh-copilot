@@ -7,6 +7,7 @@ import DatePicker from "primevue/datepicker";
 import Textarea from "primevue/textarea";
 import Message from "primevue/message";
 import FormField from "../form/FormField.vue";
+import { dialogShellPt, dialogSecondaryButtonClass, dialogPrimaryButtonClass } from "./dialogStyles";
 
 export interface CreateAuthorPayload {
   name: string;
@@ -67,6 +68,8 @@ function onSave() {
     bio: form.bio.trim(),
   });
 }
+
+const dialogPt = dialogShellPt("w-[480px]");
 </script>
 
 <template>
@@ -78,12 +81,7 @@ function onSave() {
     :closable="!loading"
     :close-on-escape="!loading"
     :draggable="false"
-    :pt="{
-      root: { class: 'w-[480px] max-w-[92vw] rounded-[21px] border border-surface-300 bg-surface-0 p-0 overflow-hidden' },
-      header: { class: 'h-[67px] items-center justify-between pt-5 pb-4 pl-6 pr-4' },
-      content: { class: 'flex flex-col gap-[21px] px-6 py-2' },
-      footer: { class: 'gap-3 justify-end pb-5 pt-4 px-6' },
-    }"
+    :pt="dialogPt"
   >
     <template #header>
       <span class="text-[21px] font-bold text-color">Create author</span>
@@ -116,14 +114,14 @@ function onSave() {
         severity="secondary"
         outlined
         :disabled="loading"
-        class="gap-1.75! rounded-md! border-surface-300! px-[11.5px]! py-2! text-sm! font-medium!"
+        :class="dialogSecondaryButtonClass"
         @click="onUpdateVisible(false)"
       />
       <Button
         label="Save"
         icon="pi pi-check"
         :loading="loading"
-        class="gap-1.75! rounded-md! border-surface-700! bg-surface-700! px-[11.5px]! py-2! text-sm! font-medium! hover:bg-surface-800!"
+        :class="dialogPrimaryButtonClass"
         @click="onSave"
       />
     </template>
