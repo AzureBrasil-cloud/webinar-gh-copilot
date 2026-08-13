@@ -114,6 +114,7 @@ function toggleMenu(event: Event, data: any) {
       :loading="loading"
       lazy
       paginator
+      row-hover
       :rows="rows"
       :rowsPerPageOptions="rowsPerPageOptions"
       :totalRecords="totalRecords"
