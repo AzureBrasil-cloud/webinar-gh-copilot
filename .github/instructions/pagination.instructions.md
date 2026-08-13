@@ -18,18 +18,16 @@ When implementing or modifying a list/index page:
 - Do **not** load the full table into memory to paginate.
 
 ## Controllers
-- `Index` actions accept `int page = 1` and pass it to the service.
+- MVC `Index` actions accept `int page = 1` and pass it to the service.
+- The JSON API controllers (`Controllers/Api/*ApiController.cs`) expose `GET /api/<feature>?page=&pageSize=` and map `PagedResult<T>` to `PagedResultDto<T>` (`Items`, `PageNumber`, `PageSize`, `TotalItems`, `TotalPages`, `HasPrevious`, `HasNext`). They reuse the same `GetPagedAsync` - never re-implement paging there.
 
-## Razor views
-- Index views typed `@model PagedResult<Entity>`.
-- Render table rows from `Model.Items`.
-- Bootstrap 5 pagination below the table:
-  - "Previous" disabled when `!Model.HasPrevious`.
-  - "Next" disabled when `!Model.HasNext`.
-  - "Page X of Y - N items" indicator.
-  - Links use `asp-action="Index"` + `asp-route-page="@i"`.
+## Views and front-end
+- Index views are Vue mount points (`<div id="<feature>-app" data-api-url="/api/<feature>">`); the list and its pager are rendered by PrimeVue, not Razor. Views may still declare `@model PagedResult<Entity>` as a server-side fallback.
+- Paging happens through PrimeVue `DataTable` with `lazy` + `paginator`, fed by `composables/usePagedFetch.ts`, which calls the paged API endpoint on every page change.
+- `Views/Shared/_Pagination.cshtml` is a Bootstrap-era leftover no longer referenced by any view. Do not wire it back in; if a new Razor list page needs paging, migrate it to the Vue + API pattern instead.
 
 ## What not to do
 - Do not add a NuGet pagination package.
-- Do not paginate on the client side.
+- Do not paginate on the client side (never fetch all rows and slice them in the browser).
+- Do not duplicate paging logic in an API controller or a Vue component.
 - Only change Index actions - leave CRUD actions untouched.
