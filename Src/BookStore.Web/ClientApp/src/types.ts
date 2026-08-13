@@ -31,6 +31,11 @@ export interface AuthorDto {
   booksCount: number;
 }
 
+export interface AuthorOption {
+  id: number;
+  name: string;
+}
+
 export interface CustomerDto {
   id: number;
   fullName: string;

@@ -1,4 +1,6 @@
 using BookStore.Application.Services;
+using BookStore.Domain.Entities;
+using BookStore.Domain.Exceptions;
 using BookStore.Web.Models.Api;
 using Microsoft.AspNetCore.Mvc;
 
@@ -44,6 +46,47 @@ public class BooksApiController : ControllerBase
         };
 
         return Ok(dto);
+    }
+
+    [HttpPost]
+    public async Task<ActionResult<BookDto>> Create(CreateBookRequest request)
+    {
+        try
+        {
+            var book = new Book
+            {
+                Title = request.Title,
+                Isbn = request.Isbn,
+                Description = request.Description,
+                Genre = request.Genre,
+                Price = request.Price,
+                Stock = request.Stock,
+                PublishedDate = request.PublishedDate,
+                AuthorId = request.AuthorId
+            };
+            var created = await _bookService.CreateAsync(book, request.NumberOfPages);
+            var withAuthor = await _bookService.GetByIdAsync(created.Id);
+
+            var dto = new BookDto
+            {
+                Id = withAuthor!.Id,
+                Title = withAuthor.Title,
+                Isbn = withAuthor.Isbn,
+                Genre = withAuthor.Genre,
+                Price = withAuthor.Price,
+                Stock = withAuthor.Stock,
+                NumberOfPages = withAuthor.NumberOfPages,
+                IsAvailable = withAuthor.IsAvailable,
+                PublishedDate = withAuthor.PublishedDate,
+                AuthorId = withAuthor.AuthorId,
+                AuthorName = withAuthor.Author?.Name ?? string.Empty
+            };
+            return CreatedAtAction(nameof(Index), new { id = dto.Id }, dto);
+        }
+        catch (DomainException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
     }
 
     [HttpDelete("{id}")]

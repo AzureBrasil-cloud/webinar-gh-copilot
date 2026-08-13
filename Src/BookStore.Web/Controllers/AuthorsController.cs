@@ -28,26 +28,6 @@ public class AuthorsController : Controller
         return View(author);
     }
 
-    public IActionResult Create() => View();
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Author author)
-    {
-        if (!ModelState.IsValid) return View(author);
-
-        try
-        {
-            await _authorService.CreateAsync(author);
-            return RedirectToAction(nameof(Index));
-        }
-        catch (DomainException ex)
-        {
-            ModelState.AddModelError(string.Empty, ex.Message);
-            return View(author);
-        }
-    }
-
     public async Task<IActionResult> Edit(int id)
     {
         var author = await _authorService.GetByIdAsync(id);

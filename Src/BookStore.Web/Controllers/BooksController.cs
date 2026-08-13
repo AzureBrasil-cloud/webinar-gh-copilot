@@ -31,35 +31,6 @@ public class BooksController : Controller
         return View(book);
     }
 
-    public async Task<IActionResult> Create()
-    {
-        await PopulateAuthorsAsync();
-        return View();
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(Book book, int numberOfPages)
-    {
-        if (!ModelState.IsValid)
-        {
-            await PopulateAuthorsAsync(book.AuthorId);
-            return View(book);
-        }
-
-        try
-        {
-            await _bookService.CreateAsync(book, numberOfPages);
-            return RedirectToAction(nameof(Index));
-        }
-        catch (DomainException ex)
-        {
-            ModelState.AddModelError(string.Empty, ex.Message);
-            await PopulateAuthorsAsync(book.AuthorId);
-            return View(book);
-        }
-    }
-
     public async Task<IActionResult> Edit(int id)
     {
         var book = await _bookService.GetByIdAsync(id);

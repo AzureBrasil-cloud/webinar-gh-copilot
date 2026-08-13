@@ -66,6 +66,8 @@ async function onDeleteConfirm() {
 }
 
 onMounted(() => load(1, rows.value));
+
+defineExpose({ reload: () => load(1, rows.value) });
 </script>
 
 <template>

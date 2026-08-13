@@ -66,7 +66,10 @@ async function onDeleteConfirm() {
 }
 
 onMounted(() => load(1, rows.value));
+
+defineExpose({ reload: () => load(1, rows.value) });
 </script>
+
 
 <template>
   <Message v-if="error" severity="error" :closable="false" class="mb-4">{{ error }}</Message>
