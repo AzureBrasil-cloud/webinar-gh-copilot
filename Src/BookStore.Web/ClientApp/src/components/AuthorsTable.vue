@@ -4,13 +4,13 @@ import { type DataTablePageEvent } from "primevue/datatable";
 import Message from "primevue/message";
 import DataTableCommon, { type DataTableColumn } from "./common/table/DataTableCommon.vue";
 import ConfirmDeleteDialog from "./common/dialog/ConfirmDeleteDialog.vue";
+import EditAuthorDialog, { type EditAuthorPayload } from "./common/dialog/EditAuthorDialog.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
 import type { AuthorDto } from "../types";
 
 const props = defineProps<{
   apiUrl: string;
   detailsUrl: string;
-  editUrl: string;
 }>();
 
 const rows = ref(10);
@@ -65,6 +65,40 @@ async function onDeleteConfirm() {
   }
 }
 
+const editDialogVisible = ref(false);
+const editTarget = ref<AuthorDto | null>(null);
+const editLoading = ref(false);
+const editError = ref<string | null>(null);
+
+function onEditRequest(data: AuthorDto) {
+  editTarget.value = data;
+  editError.value = null;
+  editDialogVisible.value = true;
+}
+
+async function onEditSubmit(payload: EditAuthorPayload) {
+  if (!editTarget.value) return;
+  editLoading.value = true;
+  editError.value = null;
+  try {
+    const response = await fetch(`${props.apiUrl}/${editTarget.value.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => null);
+      throw new Error(body?.message ?? `Request failed with status ${response.status}`);
+    }
+    editDialogVisible.value = false;
+    await load(Math.floor(first.value / rows.value) + 1, rows.value);
+  } catch (err) {
+    editError.value = err instanceof Error ? err.message : "Failed to update the author.";
+  } finally {
+    editLoading.value = false;
+  }
+}
+
 onMounted(() => load(1, rows.value));
 
 defineExpose({ reload: () => load(1, rows.value) });
@@ -80,10 +114,11 @@ defineExpose({ reload: () => load(1, rows.value) });
     :first="first"
     :rows="rows"
     :details-url="props.detailsUrl"
-    :edit-url="props.editUrl"
     confirm-delete
+    confirm-edit
     @page="onPage"
     @delete="onDeleteRequest"
+    @edit="onEditRequest"
   >
     <template #col-birthDate="{ data }">
       <span class="text-xs text-muted-color">{{ formatDate(data.birthDate) }}</span>
@@ -106,5 +141,13 @@ defineExpose({ reload: () => load(1, rows.value) });
     :loading="deleteLoading"
     :error="deleteError"
     @confirm="onDeleteConfirm"
+  />
+
+  <EditAuthorDialog
+    v-model:visible="editDialogVisible"
+    :author="editTarget"
+    :loading="editLoading"
+    :error="editError"
+    @submit="onEditSubmit"
   />
 </template>

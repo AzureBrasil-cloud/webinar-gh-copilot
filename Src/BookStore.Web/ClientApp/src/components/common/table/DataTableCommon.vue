@@ -37,6 +37,8 @@ const props = withDefaults(
     deleteUrl?: string;
     /** When true, the Delete action emits a `delete` event instead of navigating to deleteUrl. */
     confirmDelete?: boolean;
+    /** When true, the Edit action emits an `edit` event instead of navigating to editUrl. */
+    confirmEdit?: boolean;
   }>(),
   {
     rowsPerPageOptions: () => [10, 20, 50],
@@ -46,9 +48,9 @@ const props = withDefaults(
   },
 );
 
-const emit = defineEmits<{ page: [event: DataTablePageEvent]; delete: [data: any] }>();
+const emit = defineEmits<{ page: [event: DataTablePageEvent]; delete: [data: any]; edit: [data: any] }>();
 
-const hasActions = !!(props.detailsUrl || props.editUrl || props.deleteUrl || props.confirmDelete);
+const hasActions = !!(props.detailsUrl || props.editUrl || props.confirmEdit || props.deleteUrl || props.confirmDelete);
 
 const menu = ref();
 const menuItems = ref<MenuItem[]>([]);
@@ -58,8 +60,17 @@ function toggleMenu(event: Event, data: any) {
     ...(props.detailsUrl
       ? [{ label: "Details", icon: "pi pi-eye", command: () => (window.location.href = `${props.detailsUrl}/${data.id}`) }]
       : []),
-    ...(props.editUrl
-      ? [{ label: "Edit", icon: "pi pi-pencil", command: () => (window.location.href = `${props.editUrl}/${data.id}`) }]
+    ...(props.editUrl || props.confirmEdit
+      ? [
+          {
+            label: "Edit",
+            icon: "pi pi-pencil",
+            command: () => {
+              if (props.confirmEdit) emit("edit", data);
+              else window.location.href = `${props.editUrl}/${data.id}`;
+            },
+          },
+        ]
       : []),
     ...(props.deleteUrl || props.confirmDelete
       ? [

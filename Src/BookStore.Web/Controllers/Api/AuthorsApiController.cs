@@ -23,15 +23,7 @@ public class AuthorsApiController : ControllerBase
         var result = await _authorService.GetPagedAsync(page, pageSize);
         var dto = new PagedResultDto<AuthorDto>
         {
-            Items = result.Items.Select(a => new AuthorDto
-            {
-                Id = a.Id,
-                Name = a.Name,
-                Nationality = a.Nationality,
-                BirthDate = a.BirthDate,
-                Age = a.Age,
-                BooksCount = a.Books.Count
-            }).ToList(),
+            Items = result.Items.Select(ToDto).ToList(),
             PageNumber = result.PageNumber,
             PageSize = result.PageSize,
             TotalItems = result.TotalItems,
@@ -64,17 +56,29 @@ public class AuthorsApiController : ControllerBase
                 BirthDate = request.BirthDate
             };
             var created = await _authorService.CreateAsync(author);
+            return CreatedAtAction(nameof(Index), new { id = created.Id }, ToDto(created));
+        }
+        catch (DomainException ex)
+        {
+            return BadRequest(new { message = ex.Message });
+        }
+    }
 
-            var dto = new AuthorDto
+    [HttpPut("{id}")]
+    public async Task<ActionResult<AuthorDto>> Update(int id, CreateAuthorRequest request)
+    {
+        try
+        {
+            var author = new Author
             {
-                Id = created.Id,
-                Name = created.Name,
-                Nationality = created.Nationality,
-                BirthDate = created.BirthDate,
-                Age = created.Age,
-                BooksCount = 0
+                Name = request.Name,
+                Bio = request.Bio,
+                Nationality = request.Nationality,
+                BirthDate = request.BirthDate
             };
-            return CreatedAtAction(nameof(Index), new { id = dto.Id }, dto);
+            var updated = await _authorService.UpdateAsync(id, author);
+            if (updated is null) return NotFound();
+            return Ok(ToDto(updated));
         }
         catch (DomainException ex)
         {
@@ -96,4 +100,15 @@ public class AuthorsApiController : ControllerBase
             return BadRequest(new { message = ex.Message });
         }
     }
+
+    private static AuthorDto ToDto(Author a) => new()
+    {
+        Id = a.Id,
+        Name = a.Name,
+        Bio = a.Bio,
+        Nationality = a.Nationality,
+        BirthDate = a.BirthDate,
+        Age = a.Age,
+        BooksCount = a.Books.Count
+    };
 }

@@ -5,13 +5,14 @@ import Tag from "primevue/tag";
 import Message from "primevue/message";
 import DataTableCommon, { type DataTableColumn } from "./common/table/DataTableCommon.vue";
 import ConfirmDeleteDialog from "./common/dialog/ConfirmDeleteDialog.vue";
+import EditBookDialog, { type EditBookPayload } from "./common/dialog/EditBookDialog.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
-import type { BookDto } from "../types";
+import type { AuthorOption, BookDto } from "../types";
 
 const props = defineProps<{
   apiUrl: string;
   detailsUrl: string;
-  editUrl: string;
+  authors: AuthorOption[];
 }>();
 
 const rows = ref(10);
@@ -65,6 +66,40 @@ async function onDeleteConfirm() {
   }
 }
 
+const editDialogVisible = ref(false);
+const editTarget = ref<BookDto | null>(null);
+const editLoading = ref(false);
+const editError = ref<string | null>(null);
+
+function onEditRequest(data: BookDto) {
+  editTarget.value = data;
+  editError.value = null;
+  editDialogVisible.value = true;
+}
+
+async function onEditSubmit(payload: EditBookPayload) {
+  if (!editTarget.value) return;
+  editLoading.value = true;
+  editError.value = null;
+  try {
+    const response = await fetch(`${props.apiUrl}/${editTarget.value.id}`, {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+    if (!response.ok) {
+      const body = await response.json().catch(() => null);
+      throw new Error(body?.message ?? `Request failed with status ${response.status}`);
+    }
+    editDialogVisible.value = false;
+    await load(Math.floor(first.value / rows.value) + 1, rows.value);
+  } catch (err) {
+    editError.value = err instanceof Error ? err.message : "Failed to update the book.";
+  } finally {
+    editLoading.value = false;
+  }
+}
+
 onMounted(() => load(1, rows.value));
 
 defineExpose({ reload: () => load(1, rows.value) });
@@ -81,10 +116,11 @@ defineExpose({ reload: () => load(1, rows.value) });
     :first="first"
     :rows="rows"
     :details-url="props.detailsUrl"
-    :edit-url="props.editUrl"
     confirm-delete
+    confirm-edit
     @page="onPage"
     @delete="onDeleteRequest"
+    @edit="onEditRequest"
   >
     <template #col-price="{ data }">
       <span class="text-xs text-muted-color">{{ formatCurrency(data.price) }}</span>
@@ -110,6 +146,15 @@ defineExpose({ reload: () => load(1, rows.value) });
     :loading="deleteLoading"
     :error="deleteError"
     @confirm="onDeleteConfirm"
+  />
+
+  <EditBookDialog
+    v-model:visible="editDialogVisible"
+    :book="editTarget"
+    :authors="props.authors"
+    :loading="editLoading"
+    :error="editError"
+    @submit="onEditSubmit"
   />
 </template>
 

@@ -8,7 +8,6 @@ import Button from "primevue/button";
 const props = defineProps<{
   apiUrl: string;
   detailsUrl: string;
-  editUrl: string;
 }>();
 
 const authorsTable = ref<InstanceType<typeof AuthorsTable> | null>(null);
@@ -66,7 +65,6 @@ async function onCreateSubmit(payload: CreateAuthorPayload) {
       ref="authorsTable"
       :api-url="props.apiUrl"
       :details-url="props.detailsUrl"
-      :edit-url="props.editUrl"
     />
 
     <CreateAuthorDialog

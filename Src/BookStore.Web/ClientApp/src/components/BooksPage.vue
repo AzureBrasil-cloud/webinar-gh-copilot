@@ -10,7 +10,6 @@ const props = defineProps<{
   apiUrl: string;
   authorsUrl: string;
   detailsUrl: string;
-  editUrl: string;
 }>();
 
 const booksTable = ref<InstanceType<typeof BooksTable> | null>(null);
@@ -76,7 +75,7 @@ onMounted(loadAuthorOptions);
       ref="booksTable"
       :api-url="props.apiUrl"
       :details-url="props.detailsUrl"
-      :edit-url="props.editUrl"
+      :authors="authorOptions"
     />
 
     <CreateBookDialog

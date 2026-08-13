@@ -12,6 +12,7 @@ export interface BookDto {
   id: number;
   title: string;
   isbn: string;
+  description: string;
   genre: string;
   price: number;
   stock: number;
@@ -25,6 +26,7 @@ export interface BookDto {
 export interface AuthorDto {
   id: number;
   name: string;
+  bio: string;
   nationality: string;
   birthDate: string;
   age: number;
