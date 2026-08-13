@@ -7,7 +7,6 @@ import Button from "primevue/button";
 
 const props = defineProps<{
   apiUrl: string;
-  detailsUrl: string;
 }>();
 
 const authorsTable = ref<InstanceType<typeof AuthorsTable> | null>(null);
@@ -61,11 +60,7 @@ async function onCreateSubmit(payload: CreateAuthorPayload) {
       </template>
     </PageHeader>
 
-    <AuthorsTable
-      ref="authorsTable"
-      :api-url="props.apiUrl"
-      :details-url="props.detailsUrl"
-    />
+    <AuthorsTable ref="authorsTable" :api-url="props.apiUrl" />
 
     <CreateAuthorDialog
       v-model:visible="createDialogVisible"

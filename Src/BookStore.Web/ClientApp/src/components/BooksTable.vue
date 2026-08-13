@@ -6,12 +6,12 @@ import Message from "primevue/message";
 import DataTableCommon, { type DataTableColumn } from "./common/table/DataTableCommon.vue";
 import ConfirmDeleteDialog from "./common/dialog/ConfirmDeleteDialog.vue";
 import EditBookDialog, { type EditBookPayload } from "./common/dialog/EditBookDialog.vue";
+import DetailsBookDialog from "./common/dialog/DetailsBookDialog.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
 import type { AuthorOption, BookDto } from "../types";
 
 const props = defineProps<{
   apiUrl: string;
-  detailsUrl: string;
   authors: AuthorOption[];
 }>();
 
@@ -100,6 +100,14 @@ async function onEditSubmit(payload: EditBookPayload) {
   }
 }
 
+const detailsDialogVisible = ref(false);
+const detailsTarget = ref<BookDto | null>(null);
+
+function onDetailsRequest(data: BookDto) {
+  detailsTarget.value = data;
+  detailsDialogVisible.value = true;
+}
+
 onMounted(() => load(1, rows.value));
 
 defineExpose({ reload: () => load(1, rows.value) });
@@ -115,12 +123,13 @@ defineExpose({ reload: () => load(1, rows.value) });
     :total-records="totalRecords"
     :first="first"
     :rows="rows"
-    :details-url="props.detailsUrl"
+    confirm-details
     confirm-delete
     confirm-edit
     @page="onPage"
     @delete="onDeleteRequest"
     @edit="onEditRequest"
+    @details="onDetailsRequest"
   >
     <template #col-price="{ data }">
       <span class="text-xs text-muted-color">{{ formatCurrency(data.price) }}</span>
@@ -156,5 +165,7 @@ defineExpose({ reload: () => load(1, rows.value) });
     :error="editError"
     @submit="onEditSubmit"
   />
+
+  <DetailsBookDialog v-model:visible="detailsDialogVisible" :book="detailsTarget" />
 </template>
 

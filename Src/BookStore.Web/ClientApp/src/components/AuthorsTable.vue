@@ -5,12 +5,12 @@ import Message from "primevue/message";
 import DataTableCommon, { type DataTableColumn } from "./common/table/DataTableCommon.vue";
 import ConfirmDeleteDialog from "./common/dialog/ConfirmDeleteDialog.vue";
 import EditAuthorDialog, { type EditAuthorPayload } from "./common/dialog/EditAuthorDialog.vue";
+import DetailsAuthorDialog from "./common/dialog/DetailsAuthorDialog.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
 import type { AuthorDto } from "../types";
 
 const props = defineProps<{
   apiUrl: string;
-  detailsUrl: string;
 }>();
 
 const rows = ref(10);
@@ -99,6 +99,14 @@ async function onEditSubmit(payload: EditAuthorPayload) {
   }
 }
 
+const detailsDialogVisible = ref(false);
+const detailsTarget = ref<AuthorDto | null>(null);
+
+function onDetailsRequest(data: AuthorDto) {
+  detailsTarget.value = data;
+  detailsDialogVisible.value = true;
+}
+
 onMounted(() => load(1, rows.value));
 
 defineExpose({ reload: () => load(1, rows.value) });
@@ -113,12 +121,13 @@ defineExpose({ reload: () => load(1, rows.value) });
     :total-records="totalRecords"
     :first="first"
     :rows="rows"
-    :details-url="props.detailsUrl"
+    confirm-details
     confirm-delete
     confirm-edit
     @page="onPage"
     @delete="onDeleteRequest"
     @edit="onEditRequest"
+    @details="onDetailsRequest"
   >
     <template #col-birthDate="{ data }">
       <span class="text-xs text-muted-color">{{ formatDate(data.birthDate) }}</span>
@@ -150,4 +159,6 @@ defineExpose({ reload: () => load(1, rows.value) });
     :error="editError"
     @submit="onEditSubmit"
   />
+
+  <DetailsAuthorDialog v-model:visible="detailsDialogVisible" :author="detailsTarget" />
 </template>

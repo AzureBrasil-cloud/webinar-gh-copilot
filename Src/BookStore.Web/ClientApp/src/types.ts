@@ -23,6 +23,11 @@ export interface BookDto {
   authorName: string;
 }
 
+export interface AuthorBookSummary {
+  title: string;
+  publishedYear: number;
+}
+
 export interface AuthorDto {
   id: number;
   name: string;
@@ -31,6 +36,7 @@ export interface AuthorDto {
   birthDate: string;
   age: number;
   booksCount: number;
+  books: AuthorBookSummary[];
 }
 
 export interface AuthorOption {

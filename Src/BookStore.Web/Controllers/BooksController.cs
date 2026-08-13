@@ -17,11 +17,4 @@ public class BooksController : Controller
         var result = await _bookService.GetPagedAsync(page, pageSize: 10);
         return View(result);
     }
-
-    public async Task<IActionResult> Details(int id)
-    {
-        var book = await _bookService.GetByIdAsync(id);
-        if (book is null) return NotFound();
-        return View(book);
-    }
 }

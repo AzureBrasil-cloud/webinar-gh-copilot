@@ -9,4 +9,11 @@ public class AuthorDto
     public DateTime BirthDate { get; init; }
     public int Age { get; init; }
     public int BooksCount { get; init; }
+    public List<AuthorBookSummaryDto> Books { get; init; } = new();
+}
+
+public class AuthorBookSummaryDto
+{
+    public string Title { get; init; } = string.Empty;
+    public int PublishedYear { get; init; }
 }

@@ -9,7 +9,6 @@ import type { AuthorOption } from "../types";
 const props = defineProps<{
   apiUrl: string;
   authorsUrl: string;
-  detailsUrl: string;
 }>();
 
 const booksTable = ref<InstanceType<typeof BooksTable> | null>(null);
@@ -71,12 +70,7 @@ onMounted(loadAuthorOptions);
       </template>
     </PageHeader>
 
-    <BooksTable
-      ref="booksTable"
-      :api-url="props.apiUrl"
-      :details-url="props.detailsUrl"
-      :authors="authorOptions"
-    />
+    <BooksTable ref="booksTable" :api-url="props.apiUrl" :authors="authorOptions" />
 
     <CreateBookDialog
       v-model:visible="createDialogVisible"

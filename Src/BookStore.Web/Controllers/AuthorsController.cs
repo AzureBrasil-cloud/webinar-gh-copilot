@@ -17,11 +17,4 @@ public class AuthorsController : Controller
         var result = await _authorService.GetPagedAsync(page, pageSize: 10);
         return View(result);
     }
-
-    public async Task<IActionResult> Details(int id)
-    {
-        var author = await _authorService.GetByIdAsync(id);
-        if (author is null) return NotFound();
-        return View(author);
-    }
 }

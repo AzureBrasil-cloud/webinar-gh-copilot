@@ -109,6 +109,9 @@ public class AuthorsApiController : ControllerBase
         Nationality = a.Nationality,
         BirthDate = a.BirthDate,
         Age = a.Age,
-        BooksCount = a.Books.Count
+        BooksCount = a.Books.Count,
+        Books = a.Books
+            .Select(b => new AuthorBookSummaryDto { Title = b.Title, PublishedYear = b.PublishedDate.Year })
+            .ToList()
     };
 }
