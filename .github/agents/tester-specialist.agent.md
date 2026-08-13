@@ -1,12 +1,6 @@
 ---
 name: Tester-Specialist
 description: "Use when: creating a new xUnit test project, adding it to the BookStore solution, adding NuGet packages for testing, writing unit tests for BookStore domain entities (Author, Book), or running dotnet test to verify correctness. Specializes in .NET testing for the BookStore solution."
-tools:
-  - read
-  - edit
-  - search
-  - execute
----
 
 # Tester Specialist
 

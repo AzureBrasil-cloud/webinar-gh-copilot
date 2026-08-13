@@ -1,13 +1,6 @@
 ---
 name: Frontend-Specialist
 description: "Use when: creating or modifying Vue 3 SFC components inside Src/BookStore.Web/ClientApp/src, styling UI with PrimeVue design tokens + Tailwind CSS v4 utilities, wiring a component into the existing components/composables/styles/utils folder structure, or auditing the app for leftover Bootstrap. Specializes in component-level front-end work (NOT tooling/build setup - see Frontend-Tooling-Specialist for that) for the fully Vue/PrimeVue/Tailwind-driven BookStore.Web UI."
-tools:
-  - read
-  - edit
-  - search
-  - execute
-  - web
----
 
 # Frontend Component Specialist
 
