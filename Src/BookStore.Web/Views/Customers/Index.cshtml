@@ -4,13 +4,9 @@
     ViewData["Title"] = "Customers";
 }
 
-<div class="flex items-center justify-between mb-3">
-    <h1 class="text-2xl font-semibold text-color">Customers</h1>
-    <a asp-action="Create" class="btn btn-primary">New customer</a>
-</div>
-
 <div id="customers-app"
      data-api-url="/api/customers"
+     data-create-url="@Url.Action("Create", "Customers")"
      data-details-url="@Url.Action("Details", "Customers")"
      data-edit-url="@Url.Action("Edit", "Customers")"
      data-delete-url="@Url.Action("Delete", "Customers")"></div>

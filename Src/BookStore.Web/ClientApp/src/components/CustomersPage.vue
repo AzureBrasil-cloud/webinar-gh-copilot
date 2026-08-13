@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import PageHeader from "./common/pageheader/PageHeader.vue";
-import BooksTable from "./BooksTable.vue";
+import CustomersTable from "./CustomersTable.vue";
 import Button from "primevue/button";
 
 const props = defineProps<{
@@ -15,8 +15,8 @@ const props = defineProps<{
 <template>
   <div class="flex flex-col gap-3">
     <PageHeader
-      title="Books"
-      description='"Manage the bookstore catalog: browse title, author, genre, price, stock and availability, and create, edit or remove entries."'
+      title="Customers"
+      description="Manage the bookstore's customers: browse full name, email, phone number and sign-up date, and create, edit or remove entries."
     >
       <template #actions>
         <Button
@@ -25,12 +25,12 @@ const props = defineProps<{
           class="!gap-[7px] !rounded-md !border-surface-700 !bg-surface-700 !px-[11.5px] !py-2 !text-sm !font-medium hover:!bg-surface-800"
         >
           <i class="pi pi-plus text-xs" />
-          New book
+          New customer
         </Button>
       </template>
     </PageHeader>
 
-    <BooksTable
+    <CustomersTable
       :api-url="props.apiUrl"
       :details-url="props.detailsUrl"
       :edit-url="props.editUrl"

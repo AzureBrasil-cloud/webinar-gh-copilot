@@ -1,8 +1,8 @@
 <script setup lang="ts">
 import { onMounted, ref } from "vue";
-import DataTable, { type DataTablePageEvent } from "primevue/datatable";
-import Column from "primevue/column";
+import { type DataTablePageEvent } from "primevue/datatable";
 import Message from "primevue/message";
+import DataTableCommon, { type DataTableColumn } from "./common/table/DataTableCommon.vue";
 import { usePagedFetch } from "../composables/usePagedFetch";
 import type { CustomerDto } from "../types";
 
@@ -16,6 +16,13 @@ const props = defineProps<{
 const rows = ref(10);
 const first = ref(0);
 const { items: customers, totalRecords, loading, error, load } = usePagedFetch<CustomerDto>(props.apiUrl);
+
+const columns: DataTableColumn[] = [
+  { field: "fullName", header: "Full name", primary: true },
+  { field: "email", header: "Email" },
+  { field: "phoneNumber", header: "Phone number" },
+  { field: "createdAt", header: "Created at" },
+];
 
 function onPage(event: DataTablePageEvent) {
   first.value = event.first;
@@ -32,34 +39,20 @@ onMounted(() => load(1, rows.value));
 
 <template>
   <Message v-if="error" severity="error" :closable="false" class="mb-4">{{ error }}</Message>
-  <div class="rounded-border border border-surface overflow-hidden">
-    <DataTable
-      :value="customers"
-      :loading="loading"
-      lazy
-      paginator
-      :rows="rows"
-      :totalRecords="totalRecords"
-      :first="first"
-      dataKey="id"
-      class="text-sm"
-      @page="onPage"
-    >
-      <Column field="fullName" header="Full name" />
-      <Column field="email" header="Email" />
-      <Column field="phoneNumber" header="Phone number" />
-      <Column header="Created at">
-        <template #body="{ data }">{{ formatDate(data.createdAt) }}</template>
-      </Column>
-      <Column header="Actions" class="text-right">
-        <template #body="{ data }">
-          <div class="flex gap-2 justify-end">
-            <a :href="`${props.detailsUrl}/${data.id}`" class="text-primary hover:underline">Details</a>
-            <a :href="`${props.editUrl}/${data.id}`" class="text-primary hover:underline">Edit</a>
-            <a :href="`${props.deleteUrl}/${data.id}`" class="text-red-500 hover:underline">Delete</a>
-          </div>
-        </template>
-      </Column>
-    </DataTable>
-  </div>
+  <DataTableCommon
+    :value="customers"
+    :columns="columns"
+    :loading="loading"
+    :total-records="totalRecords"
+    :first="first"
+    :rows="rows"
+    :details-url="props.detailsUrl"
+    :edit-url="props.editUrl"
+    :delete-url="props.deleteUrl"
+    @page="onPage"
+  >
+    <template #col-createdAt="{ data }">
+      <span class="text-xs text-muted-color">{{ formatDate(data.createdAt) }}</span>
+    </template>
+  </DataTableCommon>
 </template>
