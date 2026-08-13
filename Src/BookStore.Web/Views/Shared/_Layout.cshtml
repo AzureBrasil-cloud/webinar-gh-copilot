@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/BookStore.Web.Web.styles.css" asp-append-version="true" />
 </head>
-<body class="bg-surface-100">
+<body class="h-screen overflow-hidden bg-surface-0">
     @{
         var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
     }
-    <div class="mx-auto flex max-w-350 items-start gap-3 p-4">
+    <div class="flex h-full w-full gap-3 p-4">
         <div
             id="sidebar-app"
             data-active="@currentController"
@@ -22,12 +22,12 @@
             data-authors-url="@Url.Action("Index", "Authors")"
             data-customers-url="@Url.Action("Index", "Customers")"
         ></div>
-        <div class="flex min-w-0 flex-1 flex-col">
-            <main role="main" class="pb-3">
+        <div class="flex h-full min-w-0 flex-1 flex-col">
+            <main role="main" class="flex-1 overflow-y-auto">
                 @RenderBody()
             </main>
 
-            <footer class="border-t border-surface-300 py-3 text-sm text-muted-color">
+            <footer class="shrink-0 border-t border-surface-300 py-3 text-sm text-muted-color">
                 &copy; 2026 - BookStore.Web - <a class="text-muted-color hover:text-primary" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
             </footer>
         </div>

@@ -20,7 +20,7 @@ const navItems = computed(() => [
 
 <template>
   <aside
-    class="sticky top-4 flex h-[calc(100vh-2rem)] w-69.5 shrink-0 flex-col gap-1.75 rounded-xl border border-surface-300 bg-surface-0 px-[17.5px] py-[17.5px]"
+    class="flex h-full w-69.5 shrink-0 flex-col gap-1.75 rounded-xl border border-surface-300 bg-surface-0 px-[17.5px] py-[17.5px]"
   >
     <div class="flex w-full items-center gap-1.75 py-[17.5px]">
       <div class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-surface-300 bg-surface-50">
