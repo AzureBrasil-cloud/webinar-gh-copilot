@@ -4,7 +4,7 @@ import PrimeVue from "primevue/config";
 import Aura from "@primeuix/themes/aura";
 import Home from "./components/Home.vue";
 import Sidebar from "./components/Sidebar.vue";
-import BooksTable from "./components/BooksTable.vue";
+import BooksPage from "./components/BooksPage.vue";
 import AuthorsTable from "./components/AuthorsTable.vue";
 import CustomersTable from "./components/CustomersTable.vue";
 
@@ -20,6 +20,6 @@ function mount(component: Component, selector: string) {
 
 mount(Home, "#home-app");
 mount(Sidebar, "#sidebar-app");
-mount(BooksTable, "#books-app");
+mount(BooksPage, "#books-app");
 mount(AuthorsTable, "#authors-app");
 mount(CustomersTable, "#customers-app");
