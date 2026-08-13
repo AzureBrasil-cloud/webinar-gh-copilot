@@ -23,8 +23,8 @@ const navItems = computed(() => [
     class="flex h-full w-69.5 shrink-0 flex-col gap-1.75 rounded-xl border border-surface-300 bg-surface-0 px-[17.5px] py-[17.5px]"
   >
     <div class="flex w-full items-center gap-1.75 py-[17.5px]">
-      <div class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-surface-300 bg-surface-50">
-        <img :src="'/images/home/books.jpg'" alt="" class="size-6 rounded-md object-cover" />
+      <div class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-surface-300 bg-surface-0">
+        <img :src="'/images/home/books.gif'" alt="" class="size-6 rounded-md object-cover" />
       </div>
       <div class="flex min-w-0 flex-1 flex-col">
         <p class="truncate text-[22px] font-black leading-none text-surface-700">BookStore</p>
