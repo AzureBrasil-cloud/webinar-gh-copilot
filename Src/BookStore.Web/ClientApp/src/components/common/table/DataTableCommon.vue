@@ -12,7 +12,15 @@ export interface DataTableColumn {
   primary?: boolean;
 }
 
-type MenuItem = { label?: string; icon?: string; class?: string; separator?: boolean; command?: () => void };
+type MenuItem = { label?: string; icon?: string; command?: () => void };
+
+// Matches Figma "modal action" popup (node 39:22030): white panel, 12px radius, 4/8px list padding, 2px item gap.
+const menuPt = {
+  root: { class: "min-w-[140px] rounded-xl border border-surface-300 bg-surface-0 p-0" },
+  list: { class: "flex flex-col gap-0.5 px-1 py-2" },
+  itemLink: { class: "gap-1.75 rounded-md px-[10.5px] py-[7px] text-sm font-normal text-color" },
+  itemIcon: { class: "text-sm" },
+};
 
 const props = withDefaults(
   defineProps<{
@@ -52,15 +60,7 @@ function toggleMenu(event: Event, data: any) {
       ? [{ label: "Edit", icon: "pi pi-pencil", command: () => (window.location.href = `${props.editUrl}/${data.id}`) }]
       : []),
     ...(props.deleteUrl
-      ? [
-          { separator: true },
-          {
-            label: "Delete",
-            icon: "pi pi-trash",
-            class: "[&_.p-menu-item-link]:!text-red-500",
-            command: () => (window.location.href = `${props.deleteUrl}/${data.id}`),
-          },
-        ]
+      ? [{ label: "Delete", icon: "pi pi-trash", command: () => (window.location.href = `${props.deleteUrl}/${data.id}`) }]
       : []),
   ];
   menu.value.toggle(event);
@@ -97,6 +97,6 @@ function toggleMenu(event: Event, data: any) {
         </template>
       </Column>
     </DataTable>
-    <Menu ref="menu" :model="menuItems" :popup="true" />
+    <Menu ref="menu" :model="menuItems" :popup="true" :pt="menuPt" />
   </div>
 </template>
