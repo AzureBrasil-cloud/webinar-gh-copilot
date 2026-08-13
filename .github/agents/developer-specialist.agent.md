@@ -1,11 +1,6 @@
 ---
 name: Developer-Specialist
 description: "Use when: adding or modifying entity properties in the BookStore domain, updating Create/Update factory methods, propagating changes to application services, controllers, or Razor views, updating seed data, or running a build to verify correctness. Specializes in implementing .NET domain changes for the BookStore three-layer solution."
-tools:
-  - read
-  - edit
-  - search
-  - execute
 ---
 
 # Developer Specialist

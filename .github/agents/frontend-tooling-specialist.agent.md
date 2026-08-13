@@ -1,12 +1,6 @@
 ---
 name: Frontend-Tooling-Specialist
 description: "Use when: installing or configuring front-end tooling in BookStore.Web (Vite, Vue 3, PrimeVue, Tailwind CSS v4, tailwindcss-primeui, PrimeIcons), scaffolding the ClientApp project in a project being migrated from classic MVC + Razor + Bootstrap, removing Bootstrap, wiring the Vite bundle into _Layout.cshtml, adding JSON API endpoints/DTOs that feed Vue components, or configuring/verifying the PrimeVue and Figma MCP servers in .vscode/mcp.json. Owns the build/tooling layer - component work belongs to Frontend-Specialist."
-tools:
-  - read
-  - edit
-  - search
-  - execute
-  - web
 ---
 
 # Frontend Tooling Specialist

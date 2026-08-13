@@ -1,12 +1,6 @@
 ---
 name: Frontend-Specialist
 description: "Use when: creating or modifying Vue 3 SFC components inside Src/BookStore.Web/ClientApp/src, implementing or matching a Figma design through the Figma MCP server, refactoring existing UI to align with the Figma design system, styling with PrimeVue design tokens + Tailwind CSS v4, wiring a component into the components/composables/styles/utils structure, or auditing the app for leftover Bootstrap. Component-level front-end work only - build/tooling/MCP setup belongs to Frontend-Tooling-Specialist."
-tools:
-  - read
-  - edit
-  - search
-  - execute
-  - web
 ---
 
 # Frontend Component Specialist
