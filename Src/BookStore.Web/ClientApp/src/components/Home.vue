@@ -33,7 +33,7 @@ defineProps<{
           </p>
         </template>
         <template #footer>
-          <Button as="a" :href="booksUrl" class="w-fit">
+          <Button as="a" :href="booksUrl" class="w-fit !border-surface-700 !bg-surface-700 !text-white hover:!bg-surface-800">
             <i class="pi pi-book" />
             Open Books
           </Button>
@@ -54,7 +54,7 @@ defineProps<{
           </p>
         </template>
         <template #footer>
-          <Button as="a" :href="authorsUrl" class="w-fit">
+          <Button as="a" :href="authorsUrl" class="w-fit !border-surface-700 !bg-surface-700 !text-white hover:!bg-surface-800">
             <i class="pi pi-users" />
             Open Authors
           </Button>
