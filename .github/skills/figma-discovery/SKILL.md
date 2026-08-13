@@ -1,26 +1,42 @@
 ---
 name: figma-discovery
-description: "Discovers and extracts design specs from Figma for the BookStore Vue/PrimeVue front-end. Use when: the user gives a Figma URL or node reference, asks to implement/match a design, or a new/changed component needs accurate spacing, color, or typography from Figma before coding. Parses Figma URLs, calls the Figma MCP tools, and maps raw values to the codebase's existing PrimeVue/Tailwind design-token conventions instead of raw hex/pixel values."
+description: "Discovers and extracts design specs from Figma for a Vue/PrimeVue front-end. Use when: the user gives a Figma URL or node reference, asks to implement/match a design, refactor existing UI to align with the design system, or a new/changed component needs accurate spacing, color, typography or assets from Figma before coding. Parses Figma URLs, calls the Figma MCP tools, and maps raw values to the codebase's existing PrimeVue/Tailwind design-token conventions instead of raw hex/pixel values."
 argument-hint: "A Figma URL or node reference, and what component/page it's for"
 ---
 
 # Figma Discovery
 
-Extracts an implementable spec from a Figma design BEFORE any component code is written or changed. Never guess at colors, spacing, or component structure from a screenshot alone - always pull the real node data through the Figma MCP server, then translate it into this codebase's existing PrimeVue + Tailwind conventions.
+Extracts an implementable spec from a Figma design BEFORE any component code is written or changed. Never
+guess colors, spacing, or structure from a screenshot alone - always pull the real node data through the
+Figma MCP server, then translate it into the codebase's existing PrimeVue + Tailwind conventions.
+
+Output of this skill is a **discovery report**, not code. Hand it to `/primevue-component-build`.
 
 ## Required setup
 
-- `.vscode/mcp.json` must have the `figma-mcp` server entry (`{"type": "http", "url": "https://mcp.figma.com/mcp"}`). If missing or malformed, stop and say this is Frontend-Tooling-Specialist's responsibility to fix - do not add it yourself from this skill.
-- Figma MCP tools used: `get_metadata`, `get_screenshot`, `get_design_context`, `get_variable_defs` (all prefixed `mcp_figma_mcp_ser_*` in this workspace).
+- `.vscode/mcp.json` must contain the `figma-mcp` server entry:
+  ```json
+  "figma-mcp": { "type": "http", "url": "https://mcp.figma.com/mcp" }
+  ```
+  If it is missing or malformed, stop and say this is Frontend-Tooling-Specialist's responsibility - do not add it from this skill.
+- The remote server requires the user to be signed into Figma and to approve the OAuth prompt in the IDE. If tool calls return an auth/permission error, ask the user to re-authenticate; never fall back to inventing values.
+- Figma MCP tools used: `get_metadata`, `get_screenshot`, `get_design_context`, `get_variable_defs`, plus whatever design-system search the server exposes. Tool names are prefixed per workspace (here: `mcp_figma_mcp_ser_*`) - list the available tools rather than assuming an exact name.
+
+## Vault touchpoints
+
+- Run `/vault-search` for the component/page name and for prior Figma token mappings before starting, so you reuse decisions already made.
+- After the implementation lands, the calling agent records the node -> component mapping and any NEW token mapping through `/vault-write`. If this skill discovers a token mapping not in the table below, say so explicitly in the report so it gets persisted.
 
 ## Procedure
 
-1. **Parse the reference.** From a URL like `figma.com/design/:fileKey/:fileName?node-id=:nodeId`, extract `fileKey` and `nodeId` (convert `-` to `:` in the node id, e.g. `39-21141` -> `39:21141`). If the user gave only a node id with no URL, ask for the file link before proceeding - never assume a `fileKey` from a previous, unrelated task still applies.
-2. **Confirm the target.** Call `get_metadata` and/or `get_screenshot` for the node first to confirm it's the right frame/component before pulling the full design context (cheaper, catches a wrong node id early).
-3. **Pull the real spec.** Call `get_design_context` for the node. Treat its output as a REFERENCE to adapt, not final code - it does not know this codebase's existing components, composables, or token conventions.
-4. **Resolve ambiguous raw values.** If a color/spacing value in the context isn't obviously a token, call `get_variable_defs` to resolve it to a named Figma variable, then map it using the token table below.
-5. **Check for an existing match first.** Before treating anything as new, search `components/common/` for an analogous existing piece (a Dialog shell, a button style, a paginator, a form field) - if the app already has a pattern for this UI, prefer reusing/extending the EXISTING code convention over the raw Figma pixel value. Only introduce a genuinely new value when there's a deliberate visual difference from anything already built.
-6. **Report the discovery** (this is the hand-off to component work, e.g. the `primevue-component-build` skill): node id/name, mapped color tokens, spacing/sizing values (flag which ones need Tailwind arbitrary values vs. default scale), typography, and which existing component(s) to mirror or extend.
+1. **Parse the reference.** From `figma.com/design/:fileKey/:fileName?node-id=:nodeId`, extract `fileKey` and `nodeId`, converting `-` to `:` in the node id (`39-21141` -> `39:21141`). If only a node id was given with no file link, ask for the URL - never reuse a `fileKey` from a previous, unrelated task.
+2. **Confirm the target.** Call `get_metadata` and/or `get_screenshot` for the node first, to check it is the right frame/component before pulling the full context (cheaper, catches a wrong node id early).
+3. **Pull the real spec.** Call `get_design_context` for the node. Treat its output as a REFERENCE to adapt, not as final code - it knows nothing about this codebase's components, composables or token conventions.
+4. **Resolve ambiguous raw values.** If a color/spacing value is not obviously a token, call `get_variable_defs` to resolve it to a named Figma variable, then map it with the table below.
+5. **Check for an existing match first.** Search `ClientApp/src/components/common/` for an analogous piece (a Dialog shell, a button style, a paginator, a form field, a table). If the app already has a pattern for this UI, prefer reusing/extending the existing convention over the raw Figma pixel value. Introduce a new value only where there is a deliberate visual difference.
+6. **Identify assets.** Note any image/icon that must be exported. Icons: prefer an equivalent PrimeIcon (`pi pi-*`). Real images: export and place under `Src/BookStore.Web/wwwroot/images/<page>/`, referenced by absolute URL (`/images/home/books.jpg`) - not imported through Vite.
+7. **Map interaction and data.** Say which parts are static design and which are data-bound (rows, empty state, loading, error, pagination) - the data always comes from the `/api/*` endpoints via the composables, never from Figma sample content.
+8. **Report the discovery** (hand-off to `/primevue-component-build`): node id + name, mapped color tokens, spacing/sizing (flagging which need Tailwind arbitrary values vs. the default scale), typography, icons/assets, which existing component(s) to mirror or extend, and which PrimeVue component + `pt` sections will carry the styling.
 
 ## Token mapping table (extend as new values appear - never leave a raw hex/px in code when a row below applies)
 
@@ -29,15 +45,25 @@ Extracts an implementable spec from a Figma design BEFORE any component code is 
 | `#334155` (dark slate) | `surface-700` (`bg-surface-700`, `border-surface-700`, `text-surface-700`) |
 | `#1e293b` (darker slate, hover) | `surface-800` |
 | `#cbd5e1` / light gray borders | `border-surface-300` |
+| `#f8fafc` / very light row hover | `surface-50` / `surface-100` |
 | `#ffffff` panel background | `bg-surface-0` |
 | `#64748b` muted gray text | `text-muted-color` |
 | primary body text (near-black slate) | `text-color` |
-| Icon glyphs | PrimeIcons `pi pi-*` class - never inline SVG or Bootstrap Icons (`bi-*`) if an equivalent `pi-*` exists |
+| Brand/primary action fill | `bg-primary` + `text-primary-contrast` (or `primaryButtonClass` from `styles/buttonStyles.ts`) |
+| Icon glyphs | PrimeIcons `pi pi-*` - never inline SVG or Bootstrap Icons (`bi-*`) when an equivalent `pi-*` exists |
+
+Recurring component-level mappings already derived from Figma (reuse, do not re-derive):
+
+- Modal shell (rounded 21px white panel, 67px header, 3-gap footer) -> `dialogShellPt(width)` / `detailsDialogPt(width)` in `components/common/dialog/dialogStyles.ts`.
+- Primary/secondary/danger action buttons -> `primaryButtonClass` / `secondaryButtonClass` / `dangerButtonClass` in `styles/buttonStyles.ts`.
+- Row-action popup menu and the flat borderless paginator -> the `menuPt` / `paginatorPt` objects in `components/common/table/DataTableCommon.vue`.
 
 ## Rules
 
-- Never fabricate Figma content - always call the MCP tools; if a tool call fails, say so rather than guessing values.
-- Never hardcode a raw hex color when a `surface-*`/`*-color` token is an exact or near match (see table above).
-- Arbitrary Tailwind values (e.g. `rounded-[21px]`, `gap-1.75`, `w-[765px]`) are acceptable and already used throughout this codebase when the Figma value doesn't land on Tailwind's default scale - don't force a bad approximation just to avoid an arbitrary value.
-- Delete any temporary screenshot/reference asset after implementation is verified against it.
-- Always re-derive `fileKey`/`nodeId` from what the user provided in THIS task - never reuse one from memory of a prior task without confirming.
+- Never fabricate Figma content - always call the MCP tools; if a call fails, say so rather than guessing values.
+- Never hardcode a raw hex when a `surface-*`/`*-color` token is an exact or near match.
+- Arbitrary Tailwind values (`rounded-[21px]`, `gap-1.75`, `w-[765px]`) are acceptable and already used throughout this codebase when the Figma value does not land on Tailwind's default scale - do not force a bad approximation to avoid one.
+- Never copy Figma's generated code verbatim into a component - it ignores the existing composables, `pt` conventions and token utilities.
+- Delete any temporary screenshot/reference asset after the implementation is verified against it.
+- Always re-derive `fileKey`/`nodeId` from what the user provided in THIS task.
+- In a new project, replace the token table above with that project's design-system mapping before using this skill in anger, and record it in that project's vault.

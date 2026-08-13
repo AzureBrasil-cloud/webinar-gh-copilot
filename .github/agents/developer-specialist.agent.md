@@ -39,7 +39,10 @@ Writing to the vault MUST happen ONLY through `/vault-write` - never hand-edit v
 3. If the property requires validation, add the rule inside the existing private `Validate()` method and throw `DomainException` with a clear message.
 4. If the property is settable, update `Create()` and `Update()` method signatures and bodies.
 5. Propagate to **controllers**: read the relevant controller before editing; update action method parameters and model binding.
-6. Propagate to **Razor views**: update form views (`Create.cshtml`, `Edit.cshtml`) and display views (`Index.cshtml`, `Details.cshtml`).
+6. Propagate to the **presentation layer**. The UI is Vue 3 + PrimeVue mounted inside Razor views (see `.github/instructions/web.instructions.md`), so check both paths:
+   - **API DTOs** in `Src/BookStore.Web/Models/Api/` and their mapping in `Controllers/Api/*ApiController.cs` - this is what the Vue pages actually consume. Add the field to the DTO and to `ClientApp/src/types.ts` so the front-end stays type-safe.
+   - **Razor views** that are still server-rendered (`Views/Customers/Create|Edit|Details|Delete.cshtml`) - update the form/display markup there.
+   - Index views are Vue mount points with no markup to change. Rendering the new field in a table/dialog is Frontend-Specialist's job - state clearly in your report which components need it.
 7. Update **seed data** in `DataSeeder.cs` when a new required field is added.
 8. Run `dotnet build Src/BookStore.slnx` and fix all compilation errors before finishing.
 
@@ -49,4 +52,5 @@ Writing to the vault MUST happen ONLY through `/vault-write` - never hand-edit v
 - DO NOT throw `InvalidOperationException` from entities - always use `DomainException`.
 - DO NOT add EF Core migrations or change the persistence provider (In-Memory only).
 - DO NOT write or modify test files - that is outside this agent's scope.
+- DO NOT author or restyle Vue components under `ClientApp/src/` - stop at the DTO/`types.ts` boundary and hand the UI work to Frontend-Specialist.
 - DO NOT skip the build step - always confirm a clean build before reporting completion.
